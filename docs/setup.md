@@ -12,7 +12,7 @@ Do not commit `.env`, service-account JSON, databases, n8n credentials or connec
 
 | Service | Fields | Setup |
 |---|---|---|
-| Gemini | LLM_PROVIDER=gemini, GEMINI_API_KEY, GEMINI_MODEL | Create a key in Google AI Studio; default gemini-3.1-flash-lite. Free tier has limits and content may improve Google products; use synthetic demo inputs |
+| Gemini | LLM_PROVIDER=gemini, GEMINI_API_KEY, GEMINI_MODEL | Create a key in Google AI Studio; default gemini-3.5-flash-lite. Free tier has limits and content may improve Google products; use synthetic demo inputs |
 | OpenAI (alternative) | OPENAI_API_KEY, OPENAI_MODEL | Set LLM_PROVIDER=openai and use an API key with credits; default gpt-4.1-mini |
 | Shopify | SHOPIFY_SHOP, SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET, SHOPIFY_WEBHOOK_SECRET | Development store, `read_orders`, `read_customers`, `read_products` and abandoned-checkout permission as required; confirm protected-customer-data access |
 | Slack | SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET, SLACK_CHANNEL_ID, SLACK_APPROVER_IDS | Dedicated test channel; bot invited with chat:write; comma-separated authorized reviewer IDs |

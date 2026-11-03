@@ -1,43 +1,115 @@
 {
-  "measured_at": "2026-11-03T10:01:57.578049+00:00",
+  "measured_at": "2026-11-03T10:19:34.063991+00:00",
+  "sample_id": "56fa556ac2e6483bad11f0ab2ecce20e",
   "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
   "synthetic_inputs": true,
+  "external_actions_dispatched": 0,
   "results": [
     {
       "workflow": "cart.abandoned",
-      "status": "failed_closed",
-      "category": "upstream_5xx"
+      "status": "schema_and_policy_passed",
+      "processor_status": "awaiting_approval",
+      "output": {
+        "intent": "high_intent",
+        "segment": "unknown",
+        "message_subject": "Your cart is here when you are ready",
+        "message_body": "You left a few items in your cart. You can return to review your selection whenever you are ready.",
+        "recommended_channel": "email",
+        "risk_flags": [],
+        "requires_human_approval": true,
+        "provider_mode": "live"
+      }
     },
     {
       "workflow": "inventory.updated",
-      "status": "failed_closed",
-      "category": "upstream_5xx"
+      "status": "schema_and_policy_passed",
+      "processor_status": "actions_pending",
+      "output": {
+        "summary": "SKU-03 has 8 available units with a daily run rate of 4.0 units and a lead time of 7 days, resulting in 2.0 days of cover. The stock status is low, and the calculated reorder quantity is 48 units.",
+        "recommendation": "Review the calculated reorder of 48 units for SKU-03 based on the deterministic days of cover and lead time.",
+        "days_of_cover": 2.0,
+        "low_stock": true,
+        "reorder_units": 48,
+        "provider_mode": "live"
+      }
     },
     {
       "workflow": "review.created",
-      "status": "failed_closed",
-      "category": "upstream_5xx"
+      "status": "schema_and_policy_passed",
+      "processor_status": "actions_pending",
+      "output": {
+        "sentiment": "negative",
+        "issue_category": "quality",
+        "urgency": "medium",
+        "evidence_quote": "The item arrived broken.",
+        "provider_mode": "live"
+      }
     },
     {
       "workflow": "product.created",
-      "status": "failed_closed",
-      "category": "upstream_5xx"
+      "status": "schema_and_policy_passed",
+      "processor_status": "draft_ready",
+      "output": {
+        "seo_title": "Studio cotton tote 00",
+        "meta_description": "A cotton tote with two handles and an internal pocket.",
+        "answer": "A cotton tote with two handles and an internal pocket.",
+        "faq_candidates": [
+          "Material: cotton.",
+          "Care: hand wash."
+        ],
+        "provider_mode": "live",
+        "json_ld": {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": "Studio cotton tote 00",
+          "description": "A cotton tote with two handles and an internal pocket."
+        }
+      }
     },
     {
       "workflow": "customer.updated",
-      "status": "failed_closed",
-      "category": "upstream_5xx"
+      "status": "schema_and_policy_passed",
+      "processor_status": "actions_pending",
+      "output": {
+        "summary": "Customer has completed 2 orders with a total spend of 45.0 USD and has been dormant for 190 days.",
+        "recommendation": "Review customer history and segment status for potential re-engagement.",
+        "segment": "dormant",
+        "spend_currency": "USD",
+        "provider_mode": "live"
+      }
     },
     {
       "workflow": "brief.requested",
-      "status": "failed_closed",
-      "category": "upstream_5xx"
+      "status": "schema_and_policy_passed",
+      "processor_status": "actions_pending",
+      "output": {
+        "summary": "Analysis for date 2026-11-03 indicates low stock for SKU-03, one negative review, and one recovery workflow currently awaiting approval based on source runs model-smoke-56fa556ac2e6483bad11f0ab2ecce20e-2 and model-smoke-56fa556ac2e6483bad11f0ab2ecce20e-3. Order value totals use source order total_price, missing refund details are unknown, and there are no cross-currency totals.",
+        "recommendation": "Review the pending cart recovery workflow awaiting approval and monitor inventory levels for SKU-03.",
+        "low_stock_skus": [
+          "SKU-03"
+        ],
+        "review_sentiment": {
+          "negative": 1
+        },
+        "recovery_workflow_counts": {
+          "awaiting_approval": 1
+        },
+        "source_runs": [
+          "model-smoke-56fa556ac2e6483bad11f0ab2ecce20e-2",
+          "model-smoke-56fa556ac2e6483bad11f0ab2ecce20e-3"
+        ],
+        "date": "2026-11-03",
+        "by_currency": {},
+        "source_records": [],
+        "note": "Order value totals use source order total_price, not gross merchandise sales. Missing refund details are unknown. No cross-currency totals.",
+        "provider_mode": "live"
+      }
     }
   ],
   "metrics": {
-    "passed": 0,
+    "passed": 6,
     "total": 6
   },
-  "limits": "Small real-API smoke sample. Does not establish classification quality, factual accuracy of narrative summaries, production reliability or any third-party integration. No customer messages, Slack posts, CRM writes or Sheet appends.",
-  "model": "gemini-3.1-flash-lite"
+  "limits": "Small real-API smoke sample. Does not establish classification quality, factual accuracy of narrative summaries, production reliability or any third-party integration. No customer messages, Slack posts, CRM writes or Sheet appends."
 }

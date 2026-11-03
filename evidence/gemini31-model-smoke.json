@@ -1,0 +1,43 @@
+{
+  "measured_at": "2026-11-03T10:01:57.578049+00:00",
+  "provider": "gemini",
+  "synthetic_inputs": true,
+  "results": [
+    {
+      "workflow": "cart.abandoned",
+      "status": "failed_closed",
+      "category": "upstream_5xx"
+    },
+    {
+      "workflow": "inventory.updated",
+      "status": "failed_closed",
+      "category": "upstream_5xx"
+    },
+    {
+      "workflow": "review.created",
+      "status": "failed_closed",
+      "category": "upstream_5xx"
+    },
+    {
+      "workflow": "product.created",
+      "status": "failed_closed",
+      "category": "upstream_5xx"
+    },
+    {
+      "workflow": "customer.updated",
+      "status": "failed_closed",
+      "category": "upstream_5xx"
+    },
+    {
+      "workflow": "brief.requested",
+      "status": "failed_closed",
+      "category": "upstream_5xx"
+    }
+  ],
+  "metrics": {
+    "passed": 0,
+    "total": 6
+  },
+  "limits": "Small real-API smoke sample. Does not establish classification quality, factual accuracy of narrative summaries, production reliability or any third-party integration. No customer messages, Slack posts, CRM writes or Sheet appends.",
+  "model": "gemini-3.1-flash-lite"
+}

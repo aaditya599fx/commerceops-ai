@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-03T10:01:57.578049+00:00",
+  "checked_at": "2026-11-03T10:19:34.063991+00:00",
   "services": {
     "shopify": {
       "read": "verified",
@@ -65,22 +65,20 @@
       "events_tab_exists": false
     },
     "gemini": {
+      "model": "gemini-3.5-flash-lite",
       "key_present": true,
-      "generation": "failed",
+      "generation": "verified_synthetic_processor_sample",
       "synthetic_smoke": {
-        "passed": 0,
+        "passed": 6,
         "total": 6
       },
-      "error_category": "upstream_5xx",
-      "model": "gemini-3.1-flash-lite",
-      "authentication": "verified_model_read",
-      "generation_http_status": 503,
-      "generation_error_status": "UNAVAILABLE",
-      "generation_error_reason": "temporary_high_demand",
-      "alternative_model_probe": {
-        "model": "gemini-2.5-flash-lite",
-        "http_status": 404,
-        "selected": false
+      "external_actions_dispatched": 0,
+      "previous_model_failure": {
+        "model": "gemini-3.1-flash-lite",
+        "http_status": 503,
+        "error_status": "UNAVAILABLE",
+        "reason": "temporary_high_demand",
+        "evidence": "evidence/gemini31-model-smoke.json"
       }
     }
   },

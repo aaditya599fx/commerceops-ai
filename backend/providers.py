@@ -69,7 +69,7 @@ class Providers:
         self.client=client or httpx.AsyncClient(timeout=settings.api_timeout,follow_redirects=False)
     async def close(self): await self.client.aclose()
     def gemini_model(self):
-        model=os.getenv('GEMINI_MODEL','gemini-3.1-flash-lite')
+        model=os.getenv('GEMINI_MODEL','gemini-3.5-flash-lite')
         if not re.fullmatch(r'gemini-[a-zA-Z0-9._-]+',model):raise ProviderError('invalid_gemini_model')
         return model
 

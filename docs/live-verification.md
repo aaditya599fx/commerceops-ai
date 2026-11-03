@@ -9,7 +9,7 @@ The local fixture demo and the synthetic reliability workload are separate from 
 - Slack: bot authentication passed and the one explicitly approved synthetic test message was sent successfully. This does not verify interactive callbacks.
 - Google Sheets: the API was enabled in the credentials' existing Google Cloud project. The configured spreadsheet now passes a read-only service-account probe. The configured Events worksheet is absent and needs creating. A synthetic append is still unverified.
 - Public webhook transport: a self-signed synthetic probe was accepted; invalid HMAC and unauthenticated API requests were rejected. This does not verify that the secret matches Shopify or that Shopify delivered an event.
-- OpenAI: authentication passed, but an actual generation request failed with credit_balance_exhausted. The latest key no longer passes authentication. OpenAI remains optional; Gemini support has been added for the requested free-tier alternative, with no verified Gemini generation yet: all six initial synthetic workflow calls failed with upstream server errors. A separate model lookup passed authentication, and a minimal generation request returned HTTP 503 UNAVAILABLE with a temporary high-demand message. A single alternative 2.5 Flash-Lite probe returned 404; the configured model remains 3.1 Flash-Lite. There is no silent provider or fixture fallback in live mode.
+- OpenAI: authentication passed, but an actual generation request failed with credit_balance_exhausted. The latest OpenAI key no longer passes authentication and OpenAI remains optional. Gemini 3.1 Flash-Lite returned HTTP 503 UNAVAILABLE with a temporary high-demand message, and a 2.5 Flash-Lite probe returned 404. Selecting the supported Gemini 3.5 Flash-Lite model resolved generation: six synthetic workflow processor checks passed schema and local policy validation. The processor supplies the real deterministic context; no synthetic segment is hardcoded into the smoke harness. Every invocation uses an isolated database, and no outbox dispatch runs. Earlier failures are preserved in evidence/gemini31-model-smoke.json and evidence/openai-model-smoke.json. This is a small API smoke sample, not a production success rate or accuracy evaluation. There is no silent provider or fixture fallback in live mode.
 
 The latest sanitized observations are recorded in evidence/live-readiness.json. Raw private connection details and receipts stay under ignored runtime/.
 
@@ -37,7 +37,7 @@ order_value_total is the sum of source order total_price in each currency. It is
 
 ## Completing the live demonstration
 
-1. Save a Gemini API key and verify a small synthetic structured-output sample (or fund the optional OpenAI provider).
+1. Model generation is verified on a six-workflow synthetic sample using Gemini 3.5 Flash-Lite. Complete the real human decision and remote action checks below before declaring full live integration.
 2. Verify the Events tab and one clearly labelled synthetic append; spreadsheet read access now passes.
 3. Configure the Slack interactive callback URL and verify an actual signed callback; the approved test message is already sent.
 4. Verify an actual Shopify delivery through the approved subscriptions without creating or modifying live customer records.
