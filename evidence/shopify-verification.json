@@ -1,34 +1,38 @@
 {
-  "checked_at": "2026-11-03T06:13:14.565065+00:00",
-  "method": "Read-only Admin GraphQL probes; no records modified",
+  "checked_at": "2026-11-03T06:28:49.209365+00:00",
+  "method": "Read-only Shopify queries",
   "checks": {
     "shop": {
       "status": "verified_read",
       "shop": "wy604h-g0.myshopify.com",
-      "verified_at": "2026-11-03T06:13:15.226949+00:00"
+      "verified_at": "2026-11-03T06:28:49.791898+00:00"
     },
+    "customers": {
+      "status": "verified_read"
+    },
+    "cart_customer_context": {
+      "status": "verified_read"
+    }
+  },
+  "granted_scopes": [
+    "read_customers",
+    "read_inventory",
+    "read_orders",
+    "read_products"
+  ],
+  "webhook_status": "not_verified",
+  "missing_required_scopes": [],
+  "limits": "Read-only API verification. No customer values retained. Signed webhook delivery and outbound integrations remain unverified.",
+  "previous_checks": {
     "products": {
       "status": "verified_read"
     },
     "orders": {
       "status": "verified_read"
     },
-    "customers": {
-      "status": "failed",
-      "category": "shopify_graphql_error"
-    },
     "abandoned_checkouts": {
       "status": "verified_read"
     }
   },
-  "granted_scopes": [
-    "read_inventory",
-    "read_orders",
-    "read_products"
-  ],
-  "webhook_status": "not_verified",
-  "missing_required_scopes": [
-    "read_customers"
-  ],
-  "limits": "Read-only API verification. No customer records, webhook deliveries, Slack approvals or outbound CRM/reporting actions were verified."
+  "previous_checks_note": "These resource reads passed during the preceding verification; the current check focused on authentication and customer access."
 }

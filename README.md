@@ -2,7 +2,7 @@
 
 A human-supervised commerce operations system: store signals become validated drafts, exception alerts, CRM follow-up tasks and traceable reports.
 
-**Current evidence:** running local FastAPI application, durable SQLite state, six implemented workflows, nine workflows imported into and exported from n8n, and a measured synthetic evaluation. Shopify token authentication and read-only shop/product/order/abandoned-checkout queries were verified against a development store. Customer access still needs read_customers; signed webhook delivery is unverified. Slack/HubSpot/Sheets integration is pending credentials and actual end-to-end verification. OpenAI authentication was verified, but the real generation smoke test returned HTTP 429 for all six workflows and failed closed; no successful live generation is claimed. This is a portfolio simulation, not a CommerceV3 internal system.
+**Current evidence:** running local FastAPI application, durable SQLite state, six implemented workflows, nine workflows imported into and exported from n8n, and a measured synthetic evaluation. Shopify token authentication and read-only shop/product/order/abandoned-checkout queries were verified against a development store. Customer access and the consent/purchase-context fields used for cart eligibility are also verified; all required read scopes are granted. Signed webhook delivery is unverified. Slack/HubSpot/Sheets integration is pending credentials and actual end-to-end verification. OpenAI authentication was verified, but the real generation smoke test returned HTTP 429 for all six workflows and failed closed; no successful live generation is claimed. This is a portfolio simulation, not a CommerceV3 internal system.
 
 ![Operations dashboard](evidence/dashboard.png)
 
