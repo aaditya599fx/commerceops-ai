@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "n8n": "2.4.4"
+  },
+  "overrides": {
+    "@langchain/langgraph-checkpoint": "1.0.0"
+  },
+  "private": true
+}

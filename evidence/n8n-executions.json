@@ -1,0 +1,87 @@
+{
+  "n8n_version": "2.4.4",
+  "provider_mode": "fixture",
+  "actual_http_webhooks": true,
+  "runs": [
+    {
+      "workflow": "cart",
+      "http_status": 202,
+      "event_id": "n8n-verified-1793684144-cart",
+      "status": "awaiting_approval",
+      "error": null
+    },
+    {
+      "workflow": "inventory",
+      "http_status": 202,
+      "event_id": "n8n-verified-1793684144-inventory",
+      "status": "completed",
+      "error": null
+    },
+    {
+      "workflow": "review",
+      "http_status": 202,
+      "event_id": "n8n-verified-1793684144-review",
+      "status": "completed",
+      "error": null
+    },
+    {
+      "workflow": "product",
+      "http_status": 202,
+      "event_id": "n8n-verified-1793684144-product",
+      "status": "draft_ready",
+      "error": null
+    },
+    {
+      "workflow": "customer",
+      "http_status": 202,
+      "event_id": "n8n-verified-1793684144-customer",
+      "status": "completed",
+      "error": null
+    },
+    {
+      "workflow": "brief",
+      "http_status": 202,
+      "event_id": "n8n-verified-1793684144-brief",
+      "status": "completed",
+      "error": null
+    }
+  ],
+  "executions": [
+    {
+      "id": 7,
+      "status": "success",
+      "workflowId": "commerceops-brief"
+    },
+    {
+      "id": 6,
+      "status": "success",
+      "workflowId": "commerceops-customer"
+    },
+    {
+      "id": 5,
+      "status": "success",
+      "workflowId": "commerceops-product"
+    },
+    {
+      "id": 4,
+      "status": "success",
+      "workflowId": "commerceops-review"
+    },
+    {
+      "id": 3,
+      "status": "success",
+      "workflowId": "commerceops-inventory"
+    },
+    {
+      "id": 2,
+      "status": "success",
+      "workflowId": "commerceops-cart"
+    },
+    {
+      "id": 1,
+      "status": "success",
+      "workflowId": "commerceops-cart"
+    }
+  ],
+  "limitations": "Actual n8n and backend execution with synthetic provider responses; no Shopify/Slack/HubSpot/Sheets integration proven."
+}

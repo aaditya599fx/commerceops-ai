@@ -1,0 +1,114 @@
+[
+  {
+    "event_id": "sample-00",
+    "type": "cart.abandoned",
+    "timestamp": "2026-11-03T06:00:00+00:00",
+    "source": "synthetic",
+    "payload": {
+      "customer_id": "customer-000",
+      "cart_id": "cart-000",
+      "email": "customer0@example.test",
+      "consent": true,
+      "items": [
+        {
+          "sku": "SKU-00",
+          "title": "Studio cotton tote 00",
+          "quantity": 1,
+          "price": 80.0
+        }
+      ],
+      "value": 80.0,
+      "currency": "USD",
+      "recent_purchase": false
+    }
+  },
+  {
+    "event_id": "sample-01",
+    "type": "cart.abandoned",
+    "timestamp": "2026-11-03T06:00:00+00:00",
+    "source": "synthetic",
+    "payload": {
+      "customer_id": "customer-001",
+      "cart_id": "cart-001",
+      "email": "customer1@example.test",
+      "consent": false,
+      "items": [
+        {
+          "sku": "SKU-01",
+          "title": "Studio cotton tote 01",
+          "quantity": 1,
+          "price": 80.0
+        }
+      ],
+      "value": 80.0,
+      "currency": "USD",
+      "recent_purchase": false
+    }
+  },
+  {
+    "event_id": "sample-02",
+    "type": "inventory.updated",
+    "timestamp": "2026-11-03T06:00:00+00:00",
+    "source": "synthetic",
+    "payload": {
+      "sku": "SKU-03",
+      "available": 8,
+      "daily_units": 4.0,
+      "lead_days": 7
+    }
+  },
+  {
+    "event_id": "sample-03",
+    "type": "review.created",
+    "timestamp": "2026-11-03T06:00:00+00:00",
+    "source": "synthetic",
+    "payload": {
+      "product_id": "product-00",
+      "rating": 1,
+      "text": "The item arrived broken. Please help."
+    }
+  },
+  {
+    "event_id": "sample-04",
+    "type": "product.created",
+    "timestamp": "2026-11-03T06:00:00+00:00",
+    "source": "synthetic",
+    "payload": {
+      "product_id": "product-00",
+      "title": "Studio cotton tote 00",
+      "description": "A cotton tote with two handles and an internal pocket.",
+      "attributes": [
+        "Cotton",
+        "Two handles",
+        "Internal pocket"
+      ],
+      "verified_faqs": [
+        "Material: cotton.",
+        "Care: hand wash."
+      ]
+    }
+  },
+  {
+    "event_id": "sample-05",
+    "type": "customer.updated",
+    "timestamp": "2026-11-03T06:00:00+00:00",
+    "source": "synthetic",
+    "payload": {
+      "customer_id": "customer-000",
+      "email": "customer0@example.test",
+      "orders": 2,
+      "total_spend": 45.0,
+      "currency": "USD",
+      "days_since_order": 190
+    }
+  },
+  {
+    "event_id": "sample-06",
+    "type": "brief.requested",
+    "timestamp": "2026-11-03T06:00:00+00:00",
+    "source": "synthetic",
+    "payload": {
+      "date": "2026-11-03"
+    }
+  }
+]
