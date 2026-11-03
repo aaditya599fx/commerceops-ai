@@ -8,6 +8,7 @@ from backend.db import DB, now
 from backend.providers import Providers,ProviderError,request
 from backend.engine import Engine
 from backend.shopify import Shopify
+from backend.integrations import record_check
 
 async def main():
     cfg=Settings();db=DB(cfg.database_url);p=Providers(cfg,db);engine=Engine(cfg,db,p)
@@ -16,7 +17,8 @@ async def main():
     for service,required in fields.items():
         if not all(os.getenv(k) for k in required) or (service=='shopify' and not (os.getenv('SHOPIFY_ACCESS_TOKEN') or (os.getenv('SHOPIFY_CLIENT_ID') and os.getenv('SHOPIFY_CLIENT_SECRET')))):results[service]={'status':'not_configured'};continue
         try:
-            if service=='shopify':results[service]=await Shopify(p.client,db,engine).check();continue
+            if service=='shopify':
+                results[service]=await Shopify(p.client,db,engine).check();record_check(service,'read','verified');continue
             if service=='openai':
                 r=await request(p.client,'GET','https://api.openai.com/v1/models/'+os.getenv('OPENAI_MODEL','gpt-4.1-mini'),safe_retry=True,headers={'Authorization':'Bearer '+os.getenv('OPENAI_API_KEY')})
             elif service=='slack':
@@ -31,7 +33,10 @@ async def main():
                 await asyncio.to_thread(c.refresh,Request())
                 r=await request(p.client,'GET','https://sheets.googleapis.com/v4/spreadsheets/'+os.getenv('GOOGLE_SPREADSHEET_ID'),safe_retry=True,params={'fields':'spreadsheetId'},headers={'Authorization':'Bearer '+c.token})
             results[service]={'status':'verified_read','verified_at':now(),'note':'Read authentication only; end-to-end workflow unverified'}
-        except Exception as exc:results[service]={'status':'failed','category':exc.category if isinstance(exc,ProviderError) else 'configuration_or_adapter_error'}
+            record_check(service,'read','verified')
+        except Exception as exc:
+            category=exc.category if isinstance(exc,ProviderError) else 'configuration_or_adapter_error'
+            results[service]={'status':'failed','category':category};record_check(service,'read','failed',category)
     report={'checked_at':now(),'probes':results,'note':'Read probes do not demonstrate writes or webhook delivery.'}
     (ROOT/'runtime/connections.json').write_text(json.dumps(report,indent=2));print(json.dumps(report,indent=2));await p.close()
 if __name__=='__main__':asyncio.run(main())

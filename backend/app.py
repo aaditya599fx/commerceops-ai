@@ -13,6 +13,8 @@ from .models import Event, Decision
 from .providers import Providers, ProviderError
 from .engine import Engine, Conflict
 from .shopify import Shopify
+from .integrations import read_checks
+from pydantic import ValidationError
 
 bearer=HTTPBearer(auto_error=False)
 
@@ -22,9 +24,12 @@ def create_app(settings=None,providers=None):
     engine=Engine(settings,db,provider); shopify=Shopify(provider.client,db,engine)
 
     async def tick():
+        await engine.drain_decisions()
         with db.session() as s:
             ids=list(s.scalars(select(Run.id).where(Run.status=='queued').order_by(Run.created).limit(20)))
-        for id in ids: await engine.process(id)
+        for id in ids:
+            await engine.process(id)
+            await engine.drain_decisions()
         await engine.flush()
         return {'processed':len(ids)}
 
@@ -79,7 +84,8 @@ def create_app(settings=None,providers=None):
         fields={'openai':['OPENAI_API_KEY'],'shopify':['SHOPIFY_SHOP','SHOPIFY_WEBHOOK_SECRET'],
             'slack':['SLACK_BOT_TOKEN','SLACK_SIGNING_SECRET','SLACK_CHANNEL_ID','SLACK_APPROVER_IDS'],
             'hubspot':['HUBSPOT_ACCESS_TOKEN'],'sheets':['GOOGLE_SERVICE_ACCOUNT_FILE','GOOGLE_SPREADSHEET_ID']}
-        return {'mode':settings.mode,'demo_transport':'n8n' if os.getenv('USE_N8N_FOR_DEMO','false')=='true' else 'python','integrations':{k:{'configured':all(os.getenv(x) for x in v) and (k!='shopify' or bool(os.getenv('SHOPIFY_ACCESS_TOKEN') or (os.getenv('SHOPIFY_CLIENT_ID') and os.getenv('SHOPIFY_CLIENT_SECRET')))),'verified':False} for k,v in fields.items()},
+        checks=read_checks()
+        return {'mode':settings.mode,'external_writes_enabled':settings.external_writes_enabled,'demo_transport':'n8n' if os.getenv('USE_N8N_FOR_DEMO','false')=='true' else 'python','integrations':{k:{'configured':all(os.getenv(x) for x in v) and (k!='shopify' or bool(os.getenv('SHOPIFY_ACCESS_TOKEN') or (os.getenv('SHOPIFY_CLIENT_ID') and os.getenv('SHOPIFY_CLIENT_SECRET')))),'checks':checks.get(k,{})} for k,v in fields.items()},
             'note':'Configured means fields present. Verification requires a live API probe and a completed workflow.'}
     @app.get('/api/metrics',dependencies=[Depends(auth)])
     async def metrics(): return engine.metrics()
@@ -112,7 +118,7 @@ def create_app(settings=None,providers=None):
         if not result: raise HTTPException(404,'Event not found')
         return result
     @app.post('/api/actions/dispatch',dependencies=[Depends(auth)])
-    async def flush(): await engine.flush(); return {'status':'dispatched'}
+    async def flush(): return await engine.flush()
     @app.post('/api/worker/tick',dependencies=[Depends(auth)])
     async def worker(): return await tick()
     @app.post('/api/runs/{id}/decision')
@@ -161,8 +167,10 @@ def create_app(settings=None,providers=None):
             try: return shopify.order_webhook(id,p)
             except (KeyError,ValueError,TypeError): raise HTTPException(422,'Invalid order payload')
         if topic=='products/create':
-            event=Event.model_validate({'event_id':'shopify:'+id,'type':'product.created','timestamp':p['created_at'],'source':'shopify',
-                'payload':{'product_id':str(p['id']),'title':p['title'],'description':p.get('body_html') or p['title'],'attributes':[],'verified_faqs':[]}})
+            try:
+                event=Event.model_validate({'event_id':'shopify:'+id,'type':'product.created','timestamp':p['created_at'],'source':'shopify',
+                    'payload':{'product_id':str(p['id']),'title':p['title'],'description':p.get('body_html') or p['title'],'attributes':[],'verified_faqs':[]}})
+            except (KeyError,TypeError,ValueError,ValidationError):raise HTTPException(422,'Invalid product payload')
             return engine.ingest(event)
         # Inventory levels lack sales velocity/lead time. Require explicit enriched import; never invent values.
         return {'status':'ignored','reason':'unsupported_topic_or_requires_enrichment'}
@@ -183,7 +191,7 @@ def create_app(settings=None,providers=None):
         if actor not in allowed: raise HTTPException(403,'Reviewer is not authorized')
         if action['action_id'] not in ('approve','reject'): raise HTTPException(422,'Unknown action')
         # No network requests in acknowledgement path; outbox worker performs follow-up writes.
-        result=await engine.decide(action['value'],action['action_id'],'slack:'+actor,'Slack button decision')
+        result=engine.queue_decision(action['value'],action['action_id'],'slack:'+actor,'Slack button decision')
         return {'text':'Decision recorded: '+result['status'],'replace_original':False}
     return app
 

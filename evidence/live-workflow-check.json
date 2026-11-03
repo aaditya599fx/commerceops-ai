@@ -1,0 +1,35 @@
+{
+  "checked_at": "2026-11-03T09:34:31.820671+00:00",
+  "source": "fictional cart through real OpenAI adapter",
+  "mode": "live",
+  "external_writes_enabled": false,
+  "event_id": "live-workflow-check-20261103",
+  "status": "dead_letter",
+  "error": "quota_exhausted",
+  "effect_receipts": [],
+  "metrics": {
+    "mode": "live",
+    "total_events": 1,
+    "statuses": {
+      "dead_letter": 1
+    },
+    "eligible_runs": 1,
+    "successful_runs": 0,
+    "workflow_success_rate": 0.0,
+    "duplicate_deliveries_suppressed": 0,
+    "recorded_effects": 0,
+    "duplicate_effect_keys": 0,
+    "schema_valid_outputs": 0,
+    "schema_outputs": 0,
+    "schema_pass_rate": null,
+    "live_schema_pass_rate": null,
+    "mean_processing_ms": 6527.32,
+    "mean_approval_seconds": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "measured_cost_usd": null,
+    "classification_quality": null,
+    "limitations": "Recorded database effects do not prove exactly-once delivery at third-party APIs. Fixture results do not measure model quality. Cost and business impact are unmeasured."
+  },
+  "note": "An isolated real-model workflow attempt. No Slack message, CRM task or spreadsheet row is dispatched. A missing model output is never replaced by a fixture."
+}

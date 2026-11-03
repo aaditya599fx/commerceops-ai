@@ -105,7 +105,7 @@ def test_currency_totals(tmp_path):
         for i,(currency,total) in enumerate([('USD',10.0),('USD',30.0),('INR',800.0)]):
             s.add(Fact(key=str(i),kind='order',source='synthetic',value=dump({'date':'2026-11-03','currency':currency,'total':total,'refunds':0})))
     m=e.business_metrics('2026-11-03'); assert m['by_currency']['USD']['average_order_value']==20
-    assert m['by_currency']['INR']['gross_sales']==800; assert len(m['source_records'])==3
+    assert m['by_currency']['INR']['order_value_total']==800; assert len(m['source_records'])==3
     run(p.close())
 
 @pytest.mark.parametrize('bad',[{'message_body':'Buy now for 50% discount!'}, {'requires_human_approval':False}, {'risk_flags':['invented_claim']}])
@@ -276,3 +276,113 @@ def test_shopify_client_credentials_exchange_and_cache(tmp_path,monkeypatch):
         assert seen.count('/admin/oauth/access_token')==1
         await p.close()
     run(scenario());Shopify._tokens.clear()
+
+def test_slack_ack_does_not_wait_for_processing_lock(tmp_path,monkeypatch):
+    monkeypatch.setenv('WORKER_ENABLED','false');monkeypatch.setenv('SLACK_SIGNING_SECRET','fixture-secret');monkeypatch.setenv('SLACK_APPROVER_IDS','U123')
+    cfg,_,_,_=make(tmp_path)
+    with TestClient(create_app(cfg)) as c:
+        h={'Authorization':'Bearer '+TOKEN};ev=sample().model_dump(mode='json')
+        c.post('/api/events',headers=h,json=ev);c.post('/api/runs/test-1/process',headers=h)
+        engine=c.app.state.engine
+        run(engine.lock.acquire())
+        try:
+            raw=urlencode({'payload':json.dumps({'user':{'id':'U123'},'actions':[{'action_id':'approve','value':'test-1'}]})}).encode()
+            ts=str(int(time.time()));sig='v0='+hmac.new(b'fixture-secret',b'v0:'+ts.encode()+b':'+raw,hashlib.sha256).hexdigest()
+            start=time.perf_counter();response=c.post('/webhooks/slack/actions',content=raw,headers={'X-Slack-Signature':sig,'X-Slack-Request-Timestamp':ts})
+            assert response.status_code==200;assert time.perf_counter()-start<1
+            assert engine.result('test-1')['status']=='awaiting_approval'
+        finally:engine.lock.release()
+        c.post('/api/worker/tick',headers=h)
+        assert engine.result('test-1')['status']=='completed'
+        assert len([x for x in get_effects(engine.db) if x.kind=='hubspot'])==1
+
+def test_queued_slack_decision_survives_restart_and_blocks_conflict(tmp_path):
+    cfg,db,p,e=make(tmp_path)
+    async def scenario():
+        ev=sample();e.ingest(ev);await e.process(ev.event_id)
+        assert not e.queue_decision(ev.event_id,'approve','slack:U123','Checked')['duplicate']
+        assert e.queue_decision(ev.event_id,'approve','slack:U123','Repeated')['duplicate']
+        with pytest.raises(Conflict):e.queue_decision(ev.event_id,'reject','slack:U123','Changed mind')
+        other=Engine(cfg,db,p);other.recover();await other.drain_decisions();await other.flush()
+        assert other.result(ev.event_id)['status']=='completed';await p.close()
+    run(scenario())
+
+def test_live_outbox_waits_for_explicit_enablement(tmp_path,monkeypatch):
+    cfg,db,p,e=make(tmp_path,'live');calls=[]
+    with db.session.begin() as s:
+        s.add(Effect(event_id='test',kind='slack',payload='{}'))
+    async def effect(*args):calls.append(args);return 'remote-id'
+    monkeypatch.setattr(p,'effect',effect)
+    async def scenario():
+        await e.flush();assert not calls;assert get_effects(db)[0].status=='pending';await p.close()
+    run(scenario())
+
+def test_webhook_replay_and_stale_update(tmp_path):
+    from backend.shopify import Shopify
+    _,db,p,e=make(tmp_path);shop=Shopify(p.client,db,e)
+    order={'id':1,'currency':'USD','created_at':'2026-11-03T00:00:00Z','updated_at':'2026-11-03T02:00:00Z','total_price':'80.00'}
+    assert shop.order_webhook('delivery-1',order)['duplicate'] is False
+    assert shop.order_webhook('delivery-1',order)['duplicate'] is True
+    with pytest.raises(Conflict):shop.order_webhook('delivery-1',{**order,'total_price':'20.00'})
+    stale={**order,'updated_at':'2026-11-03T01:00:00Z','total_price':'10.00'}
+    assert shop.order_webhook('delivery-old',stale)['reason']=='stale_order_update'
+    with db.session() as s:assert json.loads(s.get(Fact,'order:1').value)['total']==80
+    run(p.close())
+
+def test_connection_evidence_invalidated_after_key_change(monkeypatch):
+    from backend.integrations import record_check,read_checks
+    monkeypatch.setenv('OPENAI_API_KEY','fixture-key-a');record_check('openai','read','verified')
+    assert read_checks()['openai']['read']['status']=='verified'
+    monkeypatch.setenv('OPENAI_API_KEY','fixture-key-b');assert 'openai' not in read_checks()
+
+def test_minimal_order_payload_does_not_invent_refunds(tmp_path):
+    from backend.shopify import Shopify
+    _,db,p,e=make(tmp_path);shop=Shopify(p.client,db,e)
+    shop.order_webhook('minimal-order',{'id':7,'currency':'USD','created_at':'2026-11-03T00:00:00Z','total_price':'80.00'})
+    metrics=e.business_metrics('2026-11-03')['by_currency']['USD']
+    assert metrics['refunds'] is None;assert metrics['orders_without_refund_details']==1
+    assert metrics['order_value_total']==80.0;run(p.close())
+
+def test_webhook_setup_is_minimal_and_does_not_retry_creation(tmp_path,monkeypatch):
+    from backend.shopify import Shopify
+    _,db,p,e=make(tmp_path);shop=Shopify(p.client,db,e);calls=[]
+    async def graphql(query,variables=None,**options):
+        calls.append((query,variables,options))
+        if 'webhookSubscriptions' in query:return {'webhookSubscriptions':{'nodes':[],'pageInfo':{'hasNextPage':False}}}
+        assert options['safe_retry'] is False
+        assert 'customer' not in variables['input']['includeFields']
+        return {'webhookSubscriptionCreate':{'webhookSubscription':{'id':'id-'+variables['topic']},'userErrors':[]}}
+    monkeypatch.setattr(shop,'graphql',graphql)
+    async def scenario():
+        plan=await shop.configure_webhooks('https://example.test');assert all(x['status']=='planned' for x in plan['subscriptions'])
+        assert len(calls)==1
+        result=await shop.configure_webhooks('https://example.test',apply=True)
+        assert len(result['subscriptions'])==3;assert result['delivery_verified'] is False
+        await p.close()
+    run(scenario())
+
+def test_approval_latency_uses_click_receipt_not_worker_time(tmp_path):
+    from backend.db import DecisionJob
+    _,db,p,e=make(tmp_path)
+    async def scenario():
+        ev=sample();e.ingest(ev);await e.process(ev.event_id);e.queue_decision(ev.event_id,'approve','slack:U123','Reviewed')
+        with db.session.begin() as s:s.get(DecisionJob,ev.event_id).created='2026-11-03T01:00:00+00:00'
+        await e.drain_decisions()
+        assert e.result(ev.event_id)['decision_at']=='2026-11-03T01:00:00+00:00';await p.close()
+    run(scenario())
+
+def test_pending_slack_rejection_cannot_be_overridden_by_dashboard(tmp_path):
+    _,_,p,e=make(tmp_path)
+    async def scenario():
+        ev=sample();e.ingest(ev);await e.process(ev.event_id);e.queue_decision(ev.event_id,'reject','slack:U123','Not approved')
+        with pytest.raises(Conflict):await e.decide(ev.event_id,'approve','local_operator','Different reviewer')
+        await e.drain_decisions();assert e.result(ev.event_id)['status']=='rejected';await p.close()
+    run(scenario())
+
+@pytest.mark.parametrize('amount',['NaN','Infinity','-1'])
+def test_order_callback_rejects_invalid_money(tmp_path,amount):
+    from backend.shopify import Shopify
+    _,db,p,e=make(tmp_path);shop=Shopify(p.client,db,e)
+    with pytest.raises(ValueError):shop.order_webhook('invalid-money',{'id':1,'currency':'USD','created_at':'2026-11-03T00:00:00Z','total_price':amount})
+    with db.session() as s:assert s.get(Fact,'order:1') is None
+    run(p.close())

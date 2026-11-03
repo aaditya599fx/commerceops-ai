@@ -28,3 +28,5 @@ Run one API process. Restart the server and n8n. In-progress event processors re
 ## Data and security limits
 
 Synthetic fixtures are safe for public examples. Live event payloads and CRM tasks can contain personal data; databases are local private state and must not be committed. The MVP does not supply tenant separation, automatic retention/deletion, full access-role management or account compliance workflows. Do not enable a production Shopify public app without implementing its required privacy and operational lifecycle. Tokens are local environment values, never part of an export or screenshot.
+
+Slack callbacks acknowledge after queuing a durable decision. The dispatcher drains decisions before processing more events. In live mode, outbound writes remain paused unless ENABLE_EXTERNAL_WRITES=true. An empty queue is not proof of successful third-party delivery.

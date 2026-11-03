@@ -4,9 +4,10 @@ from decimal import Decimal
 from collections import Counter, defaultdict
 from sqlalchemy import select, update, func
 from sqlalchemy.exc import IntegrityError
-from .db import Run, Audit, Effect, ModelCall, Fact, dump, unpack, now
+from .db import Run, Audit, Effect, ModelCall, Fact, DecisionJob, dump, unpack, now
 from .models import Event
 from .providers import ProviderError
+from .integrations import record_check
 
 TERMINAL={'completed','blocked','rejected','held','dead_letter','draft_ready'}
 
@@ -153,11 +154,14 @@ class Engine:
     def report_effect(self,s,r):
         self.queue_effect(s,r,'sheets',{'row':[r.id,r.type,r.source,r.status,r.created,now(),self.settings.mode,r.error or '']})
 
-    async def decide(self,id,decision,actor,reason):
+    async def decide(self,id,decision,actor,reason,decided_at=None):
         async with self.lock:
             with self.db.session.begin() as s:
                 r=s.get(Run,id)
                 if not r: raise Conflict('Unknown event')
+                queued=s.get(DecisionJob,id)
+                if queued and queued.status=='pending' and (queued.decision!=decision or queued.actor!=actor):
+                    raise Conflict('A reviewer decision is already queued')
                 if r.status!='awaiting_approval':
                     if r.actor and ((decision=='approve' and r.status in ('approved','completed','held')) or (decision=='reject' and r.status=='rejected')):
                         return {'event_id':id,'status':r.status,'duplicate':True}
@@ -165,7 +169,7 @@ class Engine:
                 p=unpack(r.payload)['payload']
                 # Recheck consent and purchase context at decision time.
                 blocked=self.eligibility(s,p,id) if decision=='approve' else None
-                r.decision_at=now(); r.actor=actor; r.reason=reason; r.updated=now()
+                r.decision_at=decided_at or now(); r.actor=actor; r.reason=reason; r.updated=now()
                 if blocked:
                     r.status='blocked'; r.reason=blocked; self.db.audit(s,id,'approval_blocked',reason=blocked,actor=actor)
                 elif decision=='reject':
@@ -179,7 +183,41 @@ class Engine:
                 self.report_effect(s,r)
                 return {'event_id':id,'status':r.status,'duplicate':False}
 
+    def queue_decision(self,id,decision,actor,reason):
+        """Persist Slack decisions without waiting for the network-processing lock."""
+        try:
+            with self.db.session.begin() as s:
+                existing=s.get(DecisionJob,id)
+                if existing:
+                    if existing.decision!=decision: raise Conflict('A different decision is already recorded')
+                    return {'event_id':id,'status':existing.status,'duplicate':True}
+                r=s.get(Run,id)
+                if not r or r.type!='cart.abandoned': raise Conflict('Unknown cart approval')
+                if r.status!='awaiting_approval': raise Conflict('Event is not awaiting approval')
+                s.add(DecisionJob(event_id=id,decision=decision,actor=actor,reason=reason))
+                self.db.audit(s,id,'decision_queued',actor=actor,decision=decision)
+            return {'event_id':id,'status':'decision_queued','duplicate':False}
+        except IntegrityError:
+            with self.db.session() as s:
+                existing=s.get(DecisionJob,id)
+                if not existing or existing.decision!=decision: raise Conflict('A different decision is already recorded')
+            return {'event_id':id,'status':'decision_queued','duplicate':True}
+
+    async def drain_decisions(self):
+        with self.db.session() as s:
+            jobs=list(s.scalars(select(DecisionJob).where(DecisionJob.status=='pending').order_by(DecisionJob.created).limit(20)))
+        for job in jobs:
+            try:
+                await self.decide(job.event_id,job.decision,job.actor,job.reason,decided_at=job.created)
+                status,error='done',None
+            except Conflict:
+                status,error='conflict','approval_already_resolved'
+            with self.db.session.begin() as s:
+                stored=s.get(DecisionJob,job.event_id);stored.status=status;stored.error=error
+
     async def flush(self):
+        if self.settings.mode=='live' and not self.settings.external_writes_enabled:
+            return {'status':'paused','reason':'external_writes_disabled'}
         async with self.lock:
             with self.db.session() as s:
                 ids=list(s.scalars(select(Effect.id).where(Effect.status=='pending').order_by(Effect.id).limit(30)))
@@ -203,11 +241,13 @@ class Engine:
                                     self.db.audit(s,event_id,'approved_action_cancelled',reason=r.reason)
                                 continue
                     remote_id=await self.providers.effect(kind,p)
+                    if self.settings.mode=='live':record_check(kind if kind!='sheets' else 'sheets','write','verified')
                     with self.db.session.begin() as s:
                         effect=s.get(Effect,id); effect.status='done'; effect.remote_id=remote_id; effect.updated=now()
                         self.db.audit(s,event_id,'effect_recorded',kind=kind,mode=self.settings.mode,remote_id=remote_id)
                 except Exception as exc:
                     category=exc.category if isinstance(exc,ProviderError) else 'adapter_error'
+                    if self.settings.mode=='live':record_check(kind,'write','failed',category)
                     with self.db.session.begin() as s:
                         effect=s.get(Effect,id); effect.status='uncertain'; effect.error=category; effect.updated=now()
                         r=s.get(Run,event_id); r.status='held'; r.error='external_write:'+category
@@ -217,6 +257,7 @@ class Engine:
                     unfinished=s.scalar(select(func.count()).select_from(Effect).where(Effect.event_id==r.id,Effect.status!='done'))
                     if not unfinished:
                         r.status='completed'; r.updated=now(); self.db.audit(s,r.id,'completed')
+            return {'status':'checked'}
 
     def replay(self,id):
         with self.db.session.begin() as s:
@@ -227,14 +268,17 @@ class Engine:
         return {'event_id':id,'status':'queued'}
 
     def business_metrics(self,date):
-        totals=defaultdict(lambda:{'orders':0,'gross_sales':Decimal(0),'refunds':Decimal(0)})
+        totals=defaultdict(lambda:{'orders':0,'order_value_total':Decimal(0),'refunds':Decimal(0),'unknown_refund_orders':0})
         with self.db.session() as s:
             facts=list(s.scalars(select(Fact)))
         sources=[]
         for f in facts:
             p=unpack(f.value)
             if f.kind=='order' and p['date']==date:
-                t=totals[p['currency']]; t['orders']+=1; t['gross_sales']+=Decimal(str(p['total'])); t['refunds']+=Decimal(str(p.get('refunds',0))); sources.append(f.key)
+                t=totals[p['currency']]; t['orders']+=1; t['order_value_total']+=Decimal(str(p['total']))
+                if p.get('refunds_known',True):t['refunds']+=Decimal(str(p.get('refunds',0)))
+                else:t['unknown_refund_orders']+=1
+                sources.append(f.key)
         with self.db.session() as s:
             day_runs=[r for r in s.scalars(select(Run).order_by(Run.created)) if unpack(r.payload)['timestamp'][:10]==date]
         sentiment=Counter(); recovery=Counter(); inventory={}; run_refs=[]
@@ -244,9 +288,10 @@ class Engine:
             if output and r.type=='review.created': sentiment[output['sentiment']]+=1; run_refs.append(r.id)
             if output and r.type=='inventory.updated': inventory[payload['sku']]=output['low_stock']; run_refs.append(r.id)
         return {'low_stock_skus':[sku for sku,low in inventory.items() if low], 'review_sentiment':dict(sentiment),
-                'recovery_workflow_counts':dict(recovery),'source_runs':run_refs,'date':date,'by_currency':{c:{'orders':t['orders'],'gross_sales':float(t['gross_sales']),'refunds':float(t['refunds']),
-                'average_order_value':float((t['gross_sales']/t['orders']).quantize(Decimal('.01'))) if t['orders'] else 0} for c,t in totals.items()},
-                'source_records':sources,'note':'Gross sales and refunds kept separate. No cross-currency totals.'}
+                'recovery_workflow_counts':dict(recovery),'source_runs':run_refs,'date':date,'by_currency':{c:{'orders':t['orders'],'order_value_total':float(t['order_value_total']),
+                'refunds':None if t['unknown_refund_orders'] else float(t['refunds']),'orders_without_refund_details':t['unknown_refund_orders'],
+                'average_order_value':float((t['order_value_total']/t['orders']).quantize(Decimal('.01'))) if t['orders'] else 0} for c,t in totals.items()},
+                'source_records':sources,'note':'Order value totals use source order total_price, not gross merchandise sales. Missing refund details are unknown. No cross-currency totals.'}
 
     def metrics(self):
         with self.db.session() as s:

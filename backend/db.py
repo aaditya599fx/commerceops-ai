@@ -66,6 +66,23 @@ class Fact(Base):
     value: Mapped[str]=mapped_column(Text)
     source: Mapped[str]=mapped_column(String(30))
 
+class DecisionJob(Base):
+    __tablename__='decision_jobs'
+    event_id: Mapped[str]=mapped_column(String(160),primary_key=True)
+    decision: Mapped[str]=mapped_column(String(10))
+    actor: Mapped[str]=mapped_column(String(100))
+    reason: Mapped[str]=mapped_column(String(300))
+    status: Mapped[str]=mapped_column(String(20),default='pending',index=True)
+    created: Mapped[str]=mapped_column(String(50),default=now)
+    error: Mapped[str | None]=mapped_column(String(100),nullable=True)
+
+class WebhookReceipt(Base):
+    __tablename__='webhook_receipts'
+    id: Mapped[str]=mapped_column(String(160),primary_key=True)
+    topic: Mapped[str]=mapped_column(String(80))
+    digest: Mapped[str]=mapped_column(String(64))
+    received: Mapped[str]=mapped_column(String(50),default=now)
+
 class DB:
     def __init__(self,url):
         (ROOT/'runtime').mkdir(exist_ok=True)

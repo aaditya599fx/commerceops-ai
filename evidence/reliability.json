@@ -1,8 +1,8 @@
 {
-  "measured_at": "2026-11-03T05:30:22.377206+00:00",
+  "measured_at": "2026-11-03T09:35:19.580692+00:00",
   "environment": "single-process local Python, SQLite, deterministic fixture providers",
   "methodology": "161 fictional events across six workflows; 30 duplicate deliveries replayed; no external service calls. Eligible excludes policy-blocked/rejected; pending and failed eligible events remain in denominator.",
-  "duration_seconds": 0.646,
+  "duration_seconds": 0.553,
   "metrics": {
     "mode": "fixture",
     "total_events": 161,
@@ -21,7 +21,7 @@
     "schema_outputs": 152,
     "schema_pass_rate": 1.0,
     "live_schema_pass_rate": null,
-    "mean_processing_ms": 1.13,
+    "mean_processing_ms": 0.98,
     "mean_approval_seconds": null,
     "input_tokens": 0,
     "output_tokens": 0,

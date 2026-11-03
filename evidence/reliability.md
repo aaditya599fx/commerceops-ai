@@ -1,6 +1,6 @@
 # Measured synthetic evaluation
 
-Run: 2026-11-03T05:30:22.377206+00:00
+Run: 2026-11-03T09:35:19.580692+00:00
 
 single-process local Python, SQLite, deterministic fixture providers
 

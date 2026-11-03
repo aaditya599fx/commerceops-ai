@@ -16,6 +16,7 @@ class Settings:
     cooldown_hours: int = field(default_factory=lambda: int(os.getenv('RECOVERY_COOLDOWN_HOURS', '72')))
     high_spend: float = field(default_factory=lambda: float(os.getenv('HIGH_SPEND_THRESHOLD', '500')))
     high_spend_currency: str = field(default_factory=lambda: os.getenv('HIGH_SPEND_CURRENCY', 'USD'))
+    external_writes_enabled: bool = field(default_factory=lambda: os.getenv('ENABLE_EXTERNAL_WRITES','false').lower()=='true')
     api_timeout: float = 12
     def __post_init__(self):
         if self.mode not in ('fixture', 'live'):

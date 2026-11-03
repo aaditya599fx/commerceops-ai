@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-11-03T09:37:05.007730+00:00",
+  "event_id": "n8n-queue-regression-1793698588",
+  "n8n_webhook_http_status": 202,
+  "emulated_slack_callback_http_status": 200,
+  "callback_ack_ms": 6.43,
+  "final_status": "completed",
+  "duplicate_delivery_suppressed": true,
+  "effects": [
+    {
+      "kind": "slack",
+      "status": "done",
+      "remote_id": "fixture:n8n-queue-regression-1793698588:slack",
+      "error": null
+    },
+    {
+      "kind": "hubspot",
+      "status": "done",
+      "remote_id": "fixture:n8n-queue-regression-1793698588:hubspot",
+      "error": null
+    },
+    {
+      "kind": "sheets",
+      "status": "done",
+      "remote_id": "fixture:n8n-queue-regression-1793698588:sheets",
+      "error": null
+    }
+  ],
+  "limits": "Actual local n8n orchestration and durable decision queue; synthetic event, emulated Slack callback, fixture provider actions. Not a real human approval or Slack-server delivery."
+}

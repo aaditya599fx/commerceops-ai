@@ -6,6 +6,7 @@ from pydantic import ValidationError
 from .config import ROOT
 from .models import Draft, ReviewResult, Summary, Growth
 from .db import ModelCall
+from .integrations import record_check
 
 class ProviderError(Exception):
     def __init__(self,category): self.category=category; super().__init__(category)
@@ -92,9 +93,12 @@ class Providers:
                 self.record(event_id,False,usage)
                 if attempt==0: continue
                 raise ProviderError('invalid_model_output') from None
-            except ProviderError: raise
+            except ProviderError as exc:
+                if self.settings.mode=='live':record_check('openai','generation','failed',exc.category)
+                raise
             self.record(event_id,True,usage)
             policy(kind,result,p)
+            if self.settings.mode=='live':record_check('openai','generation','verified')
             return result
     def record(self,event_id,valid,usage):
         with self.db.session.begin() as s:

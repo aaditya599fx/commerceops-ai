@@ -2,11 +2,11 @@
 
 A human-supervised commerce operations system: store signals become validated drafts, exception alerts, CRM follow-up tasks and traceable reports.
 
-**Current evidence:** running local FastAPI application, durable SQLite state, six implemented workflows, nine workflows imported into and exported from n8n, and a measured synthetic evaluation. Shopify token authentication and read-only shop/product/order/abandoned-checkout queries were verified against a development store. Customer access and the consent/purchase-context fields used for cart eligibility are also verified; all required read scopes are granted. Signed webhook delivery is unverified. Slack/HubSpot/Sheets integration is pending credentials and actual end-to-end verification. OpenAI authentication was verified, but the real generation smoke test returned HTTP 429 for all six workflows and failed closed; no successful live generation is claimed. This is a portfolio simulation, not a CommerceV3 internal system.
+**Current evidence:** running local FastAPI application, durable SQLite state, six implemented workflows, nine workflows imported into and exported from n8n, and a measured synthetic evaluation. Shopify token authentication and read-only shop/product/order/abandoned-checkout queries were verified against the configured Shopify store. Customer access and the consent/purchase-context fields used for cart eligibility are also verified; all required read scopes are granted. Signed webhook delivery is unverified. HubSpot synthetic task creation/read-back is verified. Slack authentication is verified; message sending awaits authorization. Google Sheets API is enabled, but spreadsheet sharing and append verification remain pending. OpenAI authentication was verified, but the recorded generation smoke test returned HTTP 429 and the latest request identified credit_balance_exhausted; no successful live generation is claimed. This is a portfolio simulation, not a CommerceV3 internal system.
 
 ![Operations dashboard](evidence/dashboard.png)
 
-[Recorded demonstration](evidence/demo.mp4) · [Measured reliability](evidence/reliability.md) · [Raw measurements](evidence/reliability.json) · [Setup](docs/setup.md) · [Runbook](docs/runbook.md)
+[Recorded demonstration](evidence/demo.mp4) · [Measured reliability](evidence/reliability.md) · [Raw measurements](evidence/reliability.json) · [Setup](docs/setup.md) · [Live verification](docs/live-verification.md) · [Runbook](docs/runbook.md)
 
 ## Run locally
 
@@ -51,7 +51,7 @@ The backend can run its single-process worker by default, so the application wor
 | Review intelligence | Input/rating validation | Sentiment, category, urgency, source quote | Urgent Slack alert and support task |
 | Product growth | Source grounding and JSON-LD assembly | Extractive SEO/meta/FAQ draft | Saved for editing; never publishes |
 | Customer intelligence | First-time/repeat/high-spend/dormant/at-risk segment | Explanation and suggestion | CRM follow-up task |
-| Executive brief | Currency-separated order totals, refunds, AOV | Narrative based on supplied metrics | Spreadsheet log; source record IDs retained |
+| Executive brief | Currency-separated order totals, known/unknown refunds, AOV | Narrative based on supplied metrics | Spreadsheet log; source record IDs retained |
 
 `workflows/` contains actual n8n CLI exports. Six event workflows plus a queue dispatcher, Shopify checkout poll and daily 09:00 Asia/Kolkata brief schedule. Imported workflows are disabled by default in a fresh install; publish intentionally after configuring credentials. `scripts/build_workflows.py` creates import candidates under ignored `runtime/import/`, not exported evidence.
 
@@ -82,8 +82,12 @@ Failure tests include absent consent, changed consent, recent purchase, cooldown
 
 Use one API/worker process; the current worker uses an in-process execution lock. PostgreSQL connection support and Docker Compose are supplied but were not exercised on this host. Remote write timeouts are held for manual reconciliation rather than automatically repeated. An interrupted external call can have succeeded remotely; inspect the source service before taking further action. No Shopify production experience, live reliability or business impact is claimed by this repository.
 
-Product copy is intentionally extractive to make factual grounding enforceable. SEO ranking gains are unmeasured. Executive business metrics use ingested order facts; they are not a complete accounting ledger. Currency conversions, tax treatment, broad historical backfill and production multi-tenant isolation are outside the current MVP.
+Product copy is intentionally extractive to make factual grounding enforceable. SEO ranking gains are unmeasured. Executive business metrics use ingested order facts; they are not a complete accounting ledger. Gross merchandise sales, currency conversions, tax treatment, broad historical backfill and production multi-tenant isolation are outside the current MVP.
 
 ## Repository
 
 `backend/` application and adapters · `workflows/` n8n exports · `data/` fictional records · `prompts/` versioned prompt · `tests/` behavioral and failure tests · `docs/` setup and runbooks · `evidence/` demonstration and actual measurements.
+
+Live outbound actions default to paused (ENABLE_EXTERNAL_WRITES=false). Slack decisions are durably queued before acknowledgement. Order webhook replay and out-of-order updates are handled explicitly; see the live verification runbook.
+
+The latest isolated real-model cart attempt is preserved in [live-workflow-check.json](evidence/live-workflow-check.json): it failed closed on exhausted API credits and dispatched no actions. Real API/transport checks are summarized in [live-readiness.json](evidence/live-readiness.json).

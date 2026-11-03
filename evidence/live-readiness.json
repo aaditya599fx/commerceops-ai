@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-11-03T09:31:03.676686+00:00",
+  "services": {
+    "shopify": {
+      "read": "verified",
+      "signed_transport": "verified_self_signed_probe",
+      "shopify_delivery": "not_verified",
+      "subscription_application": "blocked_pending_data_destination_approval",
+      "partner_development_store": false,
+      "abandoned_checkout_poll": "verified_read"
+    },
+    "openai": {
+      "authentication": "verified",
+      "generation": "failed",
+      "error_code": "credit_balance_exhausted"
+    },
+    "slack": {
+      "authentication": "verified",
+      "message_write": "pending_explicit_authorization"
+    },
+    "hubspot": {
+      "task_write": "verified",
+      "read_after_write_http_status": 200,
+      "test_data": "synthetic_unassigned_task"
+    },
+    "sheets": {
+      "api_enabled": true,
+      "file_access": "denied_at_last_check",
+      "append": "not_verified"
+    }
+  },
+  "transport_checks": {
+    "self_signed_transport_http_status": 200,
+    "invalid_signature_http_status": 401,
+    "public_api_without_token_http_status": 401,
+    "local_authenticated_api_http_status": 200
+  },
+  "limits": "These are individual API/transport checks, not an end-to-end live workflow success rate. No customer email was sent; no live model output was substituted with fixtures.",
+  "workflow_check": "dead_letter",
+  "n8n_queue_check": "completed_with_fixture_effects_and_emulated_callback",
+  "unit_and_failure_tests_passed": 45
+}

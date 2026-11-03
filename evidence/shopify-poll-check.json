@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-11-03T09:38:13.899183+00:00",
+  "operation": "actual_abandoned_checkout_poll_and_normalization",
+  "status": "verified_read",
+  "queued_events": 0,
+  "skipped_records": 0,
+  "more_pages": false,
+  "processing_started": false,
+  "external_writes_enabled": false,
+  "note": "Actual Shopify polling query. No customer values exported; any source events remain only in the private isolated database. No model or outbound actions were invoked."
+}

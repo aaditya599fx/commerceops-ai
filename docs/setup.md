@@ -73,3 +73,7 @@ gh repo create commerceops-ai --private --source=. --remote=origin --push
 The repository includes exported n8n workflows and CI, not secrets or runtime state. Repository creation and push must actually succeed before claiming it is on GitHub.
 
 New Shopify Dev Dashboard apps exchange Client ID/Client Secret for a token automatically; app and store must be in the same Shopify organization. A supplied SHOPIFY_ACCESS_TOKEN overrides this flow. Use the app Client Secret as SHOPIFY_WEBHOOK_SECRET for app-configured webhooks. New HubSpot integrations use Service Keys (Settings > Integrations > Service Keys), not new legacy private apps. Existing legacy private-app tokens remain compatible.
+
+## Live action enablement and evidence
+
+ENABLE_EXTERNAL_WRITES defaults to false. Enable it deliberately after approving the intended Slack/CRM/Sheets test actions. Read-only probes update credential-bound private connection evidence, and the dashboard shows read, generation and write phases separately. Changing credentials invalidates old connection evidence; checks older than 24 hours are hidden. See docs/live-verification.md for the current blockers and verification boundaries.
