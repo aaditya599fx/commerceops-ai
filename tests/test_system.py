@@ -14,7 +14,7 @@ from backend.app import create_app
 TOKEN='test-only-token-not-a-real-secret-123456789'
 
 def make(tmp_path,mode='fixture',client=None):
-    cfg=Settings(mode=mode,token=TOKEN,database_url='sqlite:///'+str(tmp_path/'test.db'))
+    cfg=Settings(mode=mode,llm_provider='openai',token=TOKEN,database_url='sqlite:///'+str(tmp_path/'test.db'))
     db=DB(cfg.database_url); p=Providers(cfg,db,client)
     return cfg,db,p,Engine(cfg,db,p)
 

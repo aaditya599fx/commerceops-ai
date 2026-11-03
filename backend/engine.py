@@ -302,7 +302,7 @@ class Engine:
         success=sum(r.status in ('completed','draft_ready') for r in eligible)
         latency=[r.latency_ms for r in runs if r.latency_ms is not None]
         decisions=[(datetime.fromisoformat(r.decision_at)-datetime.fromisoformat(r.approval_at)).total_seconds() for r in runs if r.decision_at and r.approval_at]
-        live_calls=[c for c in calls if c.provider=='live']
+        live_calls=[c for c in calls if c.provider!='fixture']
         return {'mode':self.settings.mode,'total_events':len(runs),'statuses':dict(counts),'eligible_runs':len(eligible),'successful_runs':success,
             'workflow_success_rate':success/len(eligible) if eligible else None,
             'duplicate_deliveries_suppressed':sum(r.duplicates for r in runs),

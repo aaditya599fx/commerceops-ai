@@ -81,11 +81,11 @@ def create_app(settings=None,providers=None):
         return {'status':'ok','mode':settings.mode,'version':'0.1.0'}
     @app.get('/api/status',dependencies=[Depends(auth)])
     async def status():
-        fields={'openai':['OPENAI_API_KEY'],'shopify':['SHOPIFY_SHOP','SHOPIFY_WEBHOOK_SECRET'],
+        fields={settings.llm_provider:[settings.llm_provider.upper()+'_API_KEY'],'shopify':['SHOPIFY_SHOP','SHOPIFY_WEBHOOK_SECRET'],
             'slack':['SLACK_BOT_TOKEN','SLACK_SIGNING_SECRET','SLACK_CHANNEL_ID','SLACK_APPROVER_IDS'],
             'hubspot':['HUBSPOT_ACCESS_TOKEN'],'sheets':['GOOGLE_SERVICE_ACCOUNT_FILE','GOOGLE_SPREADSHEET_ID']}
         checks=read_checks()
-        return {'mode':settings.mode,'external_writes_enabled':settings.external_writes_enabled,'demo_transport':'n8n' if os.getenv('USE_N8N_FOR_DEMO','false')=='true' else 'python','integrations':{k:{'configured':all(os.getenv(x) for x in v) and (k!='shopify' or bool(os.getenv('SHOPIFY_ACCESS_TOKEN') or (os.getenv('SHOPIFY_CLIENT_ID') and os.getenv('SHOPIFY_CLIENT_SECRET')))),'checks':checks.get(k,{})} for k,v in fields.items()},
+        return {'mode':settings.mode,'llm_provider':settings.llm_provider,'external_writes_enabled':settings.external_writes_enabled,'demo_transport':'n8n' if os.getenv('USE_N8N_FOR_DEMO','false')=='true' else 'python','integrations':{k:{'configured':all(os.getenv(x) for x in v) and (k!='shopify' or bool(os.getenv('SHOPIFY_ACCESS_TOKEN') or (os.getenv('SHOPIFY_CLIENT_ID') and os.getenv('SHOPIFY_CLIENT_SECRET')))),'checks':checks.get(k,{})} for k,v in fields.items()},
             'note':'Configured means fields present. Verification requires a live API probe and a completed workflow.'}
     @app.get('/api/metrics',dependencies=[Depends(auth)])
     async def metrics(): return engine.metrics()

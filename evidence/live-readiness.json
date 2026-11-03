@@ -1,22 +1,57 @@
 {
-  "checked_at": "2026-11-03T09:31:03.676686+00:00",
+  "checked_at": "2026-11-03T10:01:57.578049+00:00",
   "services": {
     "shopify": {
       "read": "verified",
       "signed_transport": "verified_self_signed_probe",
       "shopify_delivery": "not_verified",
-      "subscription_application": "blocked_pending_data_destination_approval",
+      "subscription_application": "verified_created_and_read_back",
       "partner_development_store": false,
-      "abandoned_checkout_poll": "verified_read"
+      "abandoned_checkout_poll": "verified_read",
+      "subscription_details": [
+        {
+          "topic": "ORDERS_CREATE",
+          "callback_matches": true,
+          "include_fields": [
+            "id",
+            "created_at",
+            "updated_at",
+            "currency",
+            "total_price"
+          ]
+        },
+        {
+          "topic": "ORDERS_UPDATED",
+          "callback_matches": true,
+          "include_fields": [
+            "id",
+            "created_at",
+            "updated_at",
+            "currency",
+            "total_price"
+          ]
+        },
+        {
+          "topic": "PRODUCTS_CREATE",
+          "callback_matches": true,
+          "include_fields": [
+            "id",
+            "title",
+            "body_html",
+            "created_at"
+          ]
+        }
+      ]
     },
     "openai": {
-      "authentication": "verified",
+      "authentication": "failed_latest_probe",
       "generation": "failed",
-      "error_code": "credit_balance_exhausted"
+      "error_code": "credit_balance_exhausted",
+      "latest_auth_error": "upstream_401"
     },
     "slack": {
       "authentication": "verified",
-      "message_write": "pending_explicit_authorization"
+      "message_write": "verified_approved_synthetic_test"
     },
     "hubspot": {
       "task_write": "verified",
@@ -25,8 +60,28 @@
     },
     "sheets": {
       "api_enabled": true,
-      "file_access": "denied_at_last_check",
-      "append": "not_verified"
+      "file_access": "verified_read",
+      "append": "not_verified",
+      "events_tab_exists": false
+    },
+    "gemini": {
+      "key_present": true,
+      "generation": "failed",
+      "synthetic_smoke": {
+        "passed": 0,
+        "total": 6
+      },
+      "error_category": "upstream_5xx",
+      "model": "gemini-3.1-flash-lite",
+      "authentication": "verified_model_read",
+      "generation_http_status": 503,
+      "generation_error_status": "UNAVAILABLE",
+      "generation_error_reason": "temporary_high_demand",
+      "alternative_model_probe": {
+        "model": "gemini-2.5-flash-lite",
+        "http_status": 404,
+        "selected": false
+      }
     }
   },
   "transport_checks": {
@@ -38,5 +93,5 @@
   "limits": "These are individual API/transport checks, not an end-to-end live workflow success rate. No customer email was sent; no live model output was substituted with fixtures.",
   "workflow_check": "dead_letter",
   "n8n_queue_check": "completed_with_fixture_effects_and_emulated_callback",
-  "unit_and_failure_tests_passed": 45
+  "unit_and_failure_tests_passed": 53
 }

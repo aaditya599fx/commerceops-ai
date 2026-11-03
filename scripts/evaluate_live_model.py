@@ -1,5 +1,5 @@
 """Small real-API schema/policy smoke check. Does not dispatch external actions."""
-import asyncio,json,sys
+import asyncio,json,sys,os
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from backend.config import ROOT,Settings
@@ -18,7 +18,7 @@ async def main():
             output=await provider.generate('live-model-'+str(index),event['type'],payload)
             results.append({'workflow':event['type'],'status':'schema_and_policy_passed','output':output})
         except ProviderError as exc:results.append({'workflow':event['type'],'status':'failed_closed','category':exc.category})
-    report={'measured_at':now(),'provider':'OpenAI API','synthetic_inputs':True,'results':results,'metrics':{'passed':sum(x['status']=='schema_and_policy_passed' for x in results),'total':len(results)},
+    report={'measured_at':now(),'provider':settings.llm_provider,'model':os.getenv(settings.llm_provider.upper()+'_MODEL'),'synthetic_inputs':True,'results':results,'metrics':{'passed':sum(x['status']=='schema_and_policy_passed' for x in results),'total':len(results)},
         'limits':'Small real-API smoke sample. Does not establish classification quality, factual accuracy of narrative summaries, production reliability or any third-party integration. No customer messages, Slack posts, CRM writes or Sheet appends.'}
     (ROOT/'evidence/live-model-smoke.json').write_text(json.dumps(report,indent=2));await provider.close();print(json.dumps({'passed':report['metrics']['passed'],'total':len(results),'results':[{k:v for k,v in x.items() if k!='output'} for x in results]}))
 if __name__=='__main__':asyncio.run(main())

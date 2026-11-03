@@ -9,6 +9,7 @@ load_dotenv(ROOT / '.env', override=True)
 @dataclass
 class Settings:
     mode: str = field(default_factory=lambda: os.getenv('APP_MODE', 'fixture'))
+    llm_provider: str = field(default_factory=lambda: os.getenv('LLM_PROVIDER','openai'))
     database_url: str = field(default_factory=lambda: os.getenv('DATABASE_URL', 'sqlite:///./runtime/commerceops.db'))
     token: str = field(default_factory=lambda: os.getenv('APP_TOKEN', ''))
     base_url: str = field(default_factory=lambda: os.getenv('PUBLIC_BASE_URL', 'http://localhost:8000'))
@@ -21,5 +22,7 @@ class Settings:
     def __post_init__(self):
         if self.mode not in ('fixture', 'live'):
             raise ValueError('APP_MODE must be fixture or live')
+        if self.llm_provider not in ('openai','gemini'):
+            raise ValueError('LLM_PROVIDER must be openai or gemini')
         if len(self.token) < 24:
             raise ValueError('Set APP_TOKEN to a random secret of at least 24 characters')

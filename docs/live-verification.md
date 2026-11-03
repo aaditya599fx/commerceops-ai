@@ -6,10 +6,10 @@ The local fixture demo and the synthetic reliability workload are separate from 
 
 - Shopify: actual shop, product, order, customer, abandoned-checkout and cart-context read queries passed. All required read scopes were granted. The configured store is not identified by Shopify as a Partner development store; this repository does not claim production Shopify experience.
 - HubSpot: a clearly labelled, unassigned synthetic task was created through the real Tasks API and read back successfully. No customer contact or customer email was created.
-- Slack: bot authentication passed. Sending a test message is pending explicit user authorization.
-- Google Sheets: the API was enabled in the credentials' existing Google Cloud project. The configured spreadsheet still denied service-account access at the last check. File sharing must be completed before append can be verified.
+- Slack: bot authentication passed and the one explicitly approved synthetic test message was sent successfully. This does not verify interactive callbacks.
+- Google Sheets: the API was enabled in the credentials' existing Google Cloud project. The configured spreadsheet now passes a read-only service-account probe. The configured Events worksheet is absent and needs creating. A synthetic append is still unverified.
 - Public webhook transport: a self-signed synthetic probe was accepted; invalid HMAC and unauthenticated API requests were rejected. This does not verify that the secret matches Shopify or that Shopify delivered an event.
-- OpenAI: authentication passed, but an actual generation request failed with credit_balance_exhausted. API credits are needed. There is no silent fixture fallback in live mode.
+- OpenAI: authentication passed, but an actual generation request failed with credit_balance_exhausted. The latest key no longer passes authentication. OpenAI remains optional; Gemini support has been added for the requested free-tier alternative, with no verified Gemini generation yet: all six initial synthetic workflow calls failed with upstream server errors. A separate model lookup passed authentication, and a minimal generation request returned HTTP 503 UNAVAILABLE with a temporary high-demand message. A single alternative 2.5 Flash-Lite probe returned 404; the configured model remains 3.1 Flash-Lite. There is no silent provider or fixture fallback in live mode.
 
 The latest sanitized observations are recorded in evidence/live-readiness.json. Raw private connection details and receipts stay under ignored runtime/.
 
@@ -27,7 +27,7 @@ python scripts/configure_webhooks.py prepares the three required subscriptions w
 
 Order payloads include only ID, timestamps, currency and total_price. Customer contact fields are excluded. Product creation payloads include ID, title, description and created timestamp. The callback is the configured PUBLIC_BASE_URL plus /webhooks/shopify. A temporary tunnel URL must be kept running; a new URL requires updating subscriptions deliberately.
 
-Webhook setup was blocked by automatic approval review pending explicit authorization of this data flowing through Cloudflare. No subscription was created by that rejected attempt. Signed delivery from Shopify is still unverified.
+After the user explicitly approved the data and Cloudflare destination, all three minimal subscriptions were created successfully. Signed delivery from Shopify is still unverified.
 
 Order callbacks are deduplicated by delivery ID and content hash. Reusing an ID with different content is rejected. Older updated_at values do not overwrite newer order facts. Incomplete product events return 422 instead of an unhandled exception.
 
@@ -37,9 +37,9 @@ order_value_total is the sum of source order total_price in each currency. It is
 
 ## Completing the live demonstration
 
-1. Activate OpenAI API credits and retry a small structured-output sample.
-2. Share the configured spreadsheet with the service account as Editor; verify the Events tab and one clearly labelled synthetic append.
-3. Authorize the prepared Slack test message and configure its interactive callback URL.
-4. Authorize the minimal Shopify subscriptions, then verify an actual Shopify delivery without creating or modifying live customer records.
+1. Save a Gemini API key and verify a small synthetic structured-output sample (or fund the optional OpenAI provider).
+2. Verify the Events tab and one clearly labelled synthetic append; spreadsheet read access now passes.
+3. Configure the Slack interactive callback URL and verify an actual signed callback; the approved test message is already sent.
+4. Verify an actual Shopify delivery through the approved subscriptions without creating or modifying live customer records.
 5. Run the approved cart path, record a real human decision and CRM/Sheets receipts, and replay the event to show duplicate suppression.
 6. Preserve raw denominators and failures. Do not turn a successful auth probe or self-signed transport test into a claim of complete live integration.

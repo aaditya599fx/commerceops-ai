@@ -2,7 +2,7 @@
 
 A human-supervised commerce operations system: store signals become validated drafts, exception alerts, CRM follow-up tasks and traceable reports.
 
-**Current evidence:** running local FastAPI application, durable SQLite state, six implemented workflows, nine workflows imported into and exported from n8n, and a measured synthetic evaluation. Shopify token authentication and read-only shop/product/order/abandoned-checkout queries were verified against the configured Shopify store. Customer access and the consent/purchase-context fields used for cart eligibility are also verified; all required read scopes are granted. Signed webhook delivery is unverified. HubSpot synthetic task creation/read-back is verified. Slack authentication is verified; message sending awaits authorization. Google Sheets API is enabled, but spreadsheet sharing and append verification remain pending. OpenAI authentication was verified, but the recorded generation smoke test returned HTTP 429 and the latest request identified credit_balance_exhausted; no successful live generation is claimed. This is a portfolio simulation, not a CommerceV3 internal system.
+**Current evidence:** running local FastAPI application, durable SQLite state, six implemented workflows, nine workflows imported into and exported from n8n, and a measured synthetic evaluation. Shopify token authentication and read-only shop/product/order/abandoned-checkout queries were verified against the configured Shopify store. Customer access and the consent/purchase-context fields used for cart eligibility are also verified; all required read scopes are granted. Signed webhook delivery is unverified. HubSpot synthetic task creation/read-back is verified. Slack authentication and the explicitly approved synthetic test message are verified. Three minimal Shopify webhook subscriptions were created after approval; actual Shopify delivery is unverified. Google Sheets API and spreadsheet read access are verified; append verification remains pending. OpenAI authentication was verified, but the recorded generation smoke test returned HTTP 429 and the latest request identified credit_balance_exhausted; no successful live generation is claimed. Gemini is now a selectable provider; its first six synthetic generation checks failed with upstream server errors, so successful live generation remains unverified. This is a portfolio simulation, not a CommerceV3 internal system.
 
 ![Operations dashboard](evidence/dashboard.png)
 
@@ -28,7 +28,7 @@ flowchart LR
   W[n8n authenticated webhooks] --> Q
   Q --> N[n8n process / scheduled dispatcher]
   N --> B[Python policies and calculations]
-  B --> L[OpenAI structured outputs]
+  B --> L[Gemini or OpenAI structured outputs]
   L --> V[Schema and policy validation]
   V --> A[Slack human approval for cart draft]
   A --> O[Durable action outbox]
@@ -62,7 +62,7 @@ The backend can run its single-process worker by default, so the application wor
 Fill `.env` locally, run read-only probes with `python scripts/check_connections.py`, then follow [the live setup checklist](docs/setup.md). Switch to `APP_MODE=live` only after configuring the intended services. Missing credentials fail closed; live mode never falls back to fixtures.
 
 - Shopify: [read-only verification evidence](evidence/shopify-verification.json); raw-body HMAC plus exact shop-domain verification; signed order/product webhooks; Admin GraphQL shop probe, current customer consent/purchase context and paginated abandoned-checkout polling. Inventory requires a supplied sales-velocity/lead-time input; these numbers are never fabricated.
-- OpenAI: Responses API, strict JSON Schema, `store=false`, bounded timeout/retries and local validation. Prompt is versioned in `prompts/`. Email and customer IDs are omitted from model input.
+- Model API: select Gemini (`LLM_PROVIDER=gemini`) or OpenAI (`LLM_PROVIDER=openai`). Both use JSON Schema and local validation with bounded retries; failed credentials never switch providers. Gemini uses native generateContent; OpenAI uses Responses with `store=false`. Prompt is versioned in `prompts/`. Email and customer IDs are omitted from model input.
 - Slack: Web API approval messages; signed interactive callbacks; five-minute signature age limit; explicit reviewer ID allowlist.
 - HubSpot: real Tasks API. Customer communications remain internal CRM drafts. No automated email channel is implemented.
 - Google Sheets: service-account authentication, real append API, `RAW` values to prevent formula interpretation.

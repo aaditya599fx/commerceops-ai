@@ -12,12 +12,17 @@ Do not commit `.env`, service-account JSON, databases, n8n credentials or connec
 
 | Service | Fields | Setup |
 |---|---|---|
-| OpenAI | OPENAI_API_KEY, OPENAI_MODEL | API key with access to a structured-output model; default gpt-4.1-mini |
+| Gemini | LLM_PROVIDER=gemini, GEMINI_API_KEY, GEMINI_MODEL | Create a key in Google AI Studio; default gemini-3.1-flash-lite. Free tier has limits and content may improve Google products; use synthetic demo inputs |
+| OpenAI (alternative) | OPENAI_API_KEY, OPENAI_MODEL | Set LLM_PROVIDER=openai and use an API key with credits; default gpt-4.1-mini |
 | Shopify | SHOPIFY_SHOP, SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET, SHOPIFY_WEBHOOK_SECRET | Development store, `read_orders`, `read_customers`, `read_products` and abandoned-checkout permission as required; confirm protected-customer-data access |
 | Slack | SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET, SLACK_CHANNEL_ID, SLACK_APPROVER_IDS | Dedicated test channel; bot invited with chat:write; comma-separated authorized reviewer IDs |
 | HubSpot | HUBSPOT_ACCESS_TOKEN, optional HUBSPOT_OWNER_ID | Test account Service Key with task-write permissions appropriate to the account |
 | Sheets | GOOGLE_SERVICE_ACCOUNT_FILE, GOOGLE_SPREADSHEET_ID, GOOGLE_SHEET_RANGE | Enable Sheets API; share spreadsheet with service account; create `Events` worksheet |
 | n8n | N8N_BASE_URL, optional N8N_API_KEY | Local instance or cloud; API key is needed for API-managed import/export, not backend processing |
+
+For Gemini, create a key at https://aistudio.google.com/api-keys and save it as GEMINI_API_KEY locally. Its free tier is subject to availability and project quotas; no unlimited or permanent free usage is promised. Pricing: https://aistudio.google.com/docs/pricing. Keep APP_MODE=fixture while preparing credentials. The connection checker probes only the selected model provider. It does not fall back to another provider or to fixtures.
+
+For Sheets, open the actual spreadsheet, click Share, add the service account client_email, choose Editor and share. Keep General access Restricted. Spreadsheet sharing is separate from Google Cloud project IAM; project-wide Editor access is unnecessary. Create a worksheet named Events.
 
 Run `python scripts/check_connections.py`. Probes only read authentication; they do not post messages, create CRM tasks, append sheet rows or prove webhook delivery. Results are written to ignored `runtime/connections.json`.
 

@@ -68,12 +68,38 @@ class Providers:
         self.settings=settings; self.db=db
         self.client=client or httpx.AsyncClient(timeout=settings.api_timeout,follow_redirects=False)
     async def close(self): await self.client.aclose()
+    def gemini_model(self):
+        model=os.getenv('GEMINI_MODEL','gemini-3.1-flash-lite')
+        if not re.fullmatch(r'gemini-[a-zA-Z0-9._-]+',model):raise ProviderError('invalid_gemini_model')
+        return model
+
+    async def gemini_generate(self,kind,p,schema):
+        key=os.getenv('GEMINI_API_KEY')
+        if not key:raise ProviderError('gemini_not_configured')
+        response=await request(self.client,'POST',
+            'https://generativelanguage.googleapis.com/v1beta/models/'+self.gemini_model()+':generateContent',
+            safe_retry=True,timeout=30,headers={'x-goog-api-key':key},json={
+                'systemInstruction':{'parts':[{'text':(ROOT/'prompts/system-v1.txt').read_text()}]},
+                'contents':[{'role':'user','parts':[{'text':json.dumps({'workflow':kind,'data':p})}]}],
+                'generationConfig':{'responseMimeType':'application/json','responseJsonSchema':schema.model_json_schema(),
+                    'maxOutputTokens':1600}})
+        data=response.json();metadata=data.get('usageMetadata',{})
+        usage={'input_tokens':metadata.get('promptTokenCount',0),
+            'output_tokens':metadata.get('candidatesTokenCount',0)+metadata.get('thoughtsTokenCount',0)}
+        candidates=data.get('candidates',[])
+        if data.get('promptFeedback',{}).get('blockReason') or len(candidates)!=1 or candidates[0].get('finishReason')!='STOP':
+            raise ProviderError('model_incomplete_or_refused')
+        parts=candidates[0].get('content',{}).get('parts',[])
+        text=''.join(part['text'] for part in parts if 'text' in part and not part.get('thought'))
+        return json.loads(text),usage
+
     async def generate(self,event_id,kind,p):
         schema=SCHEMAS.get(kind,Summary)
         for attempt in range(2):
             usage={}; output=None
             try:
                 if self.settings.mode=='fixture': output=fixture(kind,p)
+                elif self.settings.llm_provider=='gemini':output,usage=await self.gemini_generate(kind,p,schema)
                 else:
                     key=os.getenv('OPENAI_API_KEY')
                     if not key: raise ProviderError('openai_not_configured')
@@ -92,17 +118,21 @@ class Providers:
             except (ValidationError,ValueError,KeyError,TypeError):
                 self.record(event_id,False,usage)
                 if attempt==0: continue
+                if self.settings.mode=='live':record_check(self.settings.llm_provider,'generation','failed','invalid_model_output')
                 raise ProviderError('invalid_model_output') from None
             except ProviderError as exc:
-                if self.settings.mode=='live':record_check('openai','generation','failed',exc.category)
+                if self.settings.mode=='live':record_check(self.settings.llm_provider,'generation','failed',exc.category)
                 raise
             self.record(event_id,True,usage)
-            policy(kind,result,p)
-            if self.settings.mode=='live':record_check('openai','generation','verified')
+            try:policy(kind,result,p)
+            except ProviderError as exc:
+                if self.settings.mode=='live':record_check(self.settings.llm_provider,'generation','failed',exc.category)
+                raise
+            if self.settings.mode=='live':record_check(self.settings.llm_provider,'generation','verified')
             return result
     def record(self,event_id,valid,usage):
         with self.db.session.begin() as s:
-            s.add(ModelCall(event_id=event_id,provider=self.settings.mode,valid=valid,
+            s.add(ModelCall(event_id=event_id,provider='fixture' if self.settings.mode=='fixture' else self.settings.llm_provider,valid=valid,
                 input_tokens=usage.get('input_tokens',0),output_tokens=usage.get('output_tokens',0)))
 
     async def effect(self,kind,p):
