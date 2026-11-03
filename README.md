@@ -2,7 +2,7 @@
 
 A human-supervised commerce operations system: store signals become validated drafts, exception alerts, CRM follow-up tasks and traceable reports.
 
-**Current evidence:** running local FastAPI application, durable SQLite state, six implemented workflows, nine workflows imported into and exported from n8n, and a measured synthetic evaluation. Shopify/Slack/HubSpot/Sheets integration is pending credentials and actual end-to-end verification. OpenAI authentication was verified, but the real generation smoke test returned HTTP 429 for all six workflows and failed closed; no successful live generation is claimed. This is a portfolio simulation, not a CommerceV3 internal system.
+**Current evidence:** running local FastAPI application, durable SQLite state, six implemented workflows, nine workflows imported into and exported from n8n, and a measured synthetic evaluation. Shopify token authentication and read-only shop/product/order/abandoned-checkout queries were verified against a development store. Customer access still needs read_customers; signed webhook delivery is unverified. Slack/HubSpot/Sheets integration is pending credentials and actual end-to-end verification. OpenAI authentication was verified, but the real generation smoke test returned HTTP 429 for all six workflows and failed closed; no successful live generation is claimed. This is a portfolio simulation, not a CommerceV3 internal system.
 
 ![Operations dashboard](evidence/dashboard.png)
 
@@ -61,7 +61,7 @@ The backend can run its single-process worker by default, so the application wor
 
 Fill `.env` locally, run read-only probes with `python scripts/check_connections.py`, then follow [the live setup checklist](docs/setup.md). Switch to `APP_MODE=live` only after configuring the intended services. Missing credentials fail closed; live mode never falls back to fixtures.
 
-- Shopify: raw-body HMAC plus exact shop-domain verification; signed order/product webhooks; Admin GraphQL shop probe, current customer consent/purchase context and paginated abandoned-checkout polling. Inventory requires a supplied sales-velocity/lead-time input; these numbers are never fabricated.
+- Shopify: [read-only verification evidence](evidence/shopify-verification.json); raw-body HMAC plus exact shop-domain verification; signed order/product webhooks; Admin GraphQL shop probe, current customer consent/purchase context and paginated abandoned-checkout polling. Inventory requires a supplied sales-velocity/lead-time input; these numbers are never fabricated.
 - OpenAI: Responses API, strict JSON Schema, `store=false`, bounded timeout/retries and local validation. Prompt is versioned in `prompts/`. Email and customer IDs are omitted from model input.
 - Slack: Web API approval messages; signed interactive callbacks; five-minute signature age limit; explicit reviewer ID allowlist.
 - HubSpot: real Tasks API. Customer communications remain internal CRM drafts. No automated email channel is implemented.

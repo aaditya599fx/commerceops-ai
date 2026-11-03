@@ -108,7 +108,7 @@ gh auth login --hostname github.com --git-protocol https --web
 gh auth status
 ```
 
-Complete the displayed browser/device authorization. The private repository already exists at https://github.com/aaditya599fx/commerceops-ai . Source upload is pending usable GitHub authentication.
+Complete the displayed browser/device authorization. The private repository already exists at https://github.com/aaditya599fx/commerceops-ai . GitHub CLI authentication was verified; the repository is configured as the origin remote.
 
 ## Check saved fields
 
