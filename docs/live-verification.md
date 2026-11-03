@@ -6,8 +6,8 @@ The local fixture demo and the synthetic reliability workload are separate from 
 
 - Shopify: actual shop, product, order, customer, abandoned-checkout and cart-context read queries passed. All required read scopes were granted. The configured store is not identified by Shopify as a Partner development store; this repository does not claim production Shopify experience.
 - HubSpot: a clearly labelled, unassigned synthetic task was created through the real Tasks API and read back successfully. No customer contact or customer email was created.
-- Slack: bot authentication passed and the one explicitly approved synthetic test message was sent successfully. This does not verify interactive callbacks.
-- Google Sheets: the API was enabled in the credentials' existing Google Cloud project. The configured spreadsheet now passes a read-only service-account probe. The configured Events worksheet is absent and needs creating. A synthetic append is still unverified.
+- Slack: bot authentication and the approved connection-test message passed. The approved cart message was then sent once, and the actual authorized human click arrived as a signed HTTPS callback. Its durable decision was drained by the worker and completed the task/report actions. An observed temporary tunnel outage and missing immediate feedback caused troubleshooting; a dashboard fallback was offered but was not used. Socket Mode was investigated but no new token or receiver was created.
+- Google Sheets: the API was enabled in the credentials' existing Google Cloud project. The service account can read the spreadsheet. The approved Events worksheet and headers were created, and a real append was read back. Duplicate replay left exactly one matching row.
 - Public webhook transport: a self-signed synthetic probe was accepted; invalid HMAC and unauthenticated API requests were rejected. This does not verify that the secret matches Shopify or that Shopify delivered an event.
 - OpenAI: authentication passed, but an actual generation request failed with credit_balance_exhausted. The latest OpenAI key no longer passes authentication and OpenAI remains optional. Gemini 3.1 Flash-Lite returned HTTP 503 UNAVAILABLE with a temporary high-demand message, and a 2.5 Flash-Lite probe returned 404. Selecting the supported Gemini 3.5 Flash-Lite model resolved generation: six synthetic workflow processor checks passed schema and local policy validation. The processor supplies the real deterministic context; no synthetic segment is hardcoded into the smoke harness. Every invocation uses an isolated database, and no outbox dispatch runs. Earlier failures are preserved in evidence/gemini31-model-smoke.json and evidence/openai-model-smoke.json. This is a small API smoke sample, not a production success rate or accuracy evaluation. There is no silent provider or fixture fallback in live mode.
 
@@ -38,8 +38,14 @@ order_value_total is the sum of source order total_price in each currency. It is
 ## Completing the live demonstration
 
 1. Model generation is verified on a six-workflow synthetic sample using Gemini 3.5 Flash-Lite. Complete the real human decision and remote action checks below before declaring full live integration.
-2. Verify the Events tab and one clearly labelled synthetic append; spreadsheet read access now passes.
-3. Configure the Slack interactive callback URL and verify an actual signed callback; the approved test message is already sent.
+2. The Events worksheet and one approved synthetic append/readback are verified.
+3. Actual Slack HTTPS review is verified for the one approved synthetic cart; its remote task and report receipts were read back. Keep this separate from large-sample reliability.
 4. Verify an actual Shopify delivery through the approved subscriptions without creating or modifying live customer records.
-5. Run the approved cart path, record a real human decision and CRM/Sheets receipts, and replay the event to show duplicate suppression.
+5. The approved synthetic cart path, actual human Slack decision, task/report readbacks, duplicate replay and no-consent policy failure are recorded in evidence/live-cart-demonstration.json. The live edited screen recording is evidence/live-demo.mp4.
 6. Preserve raw denominators and failures. Do not turn a successful auth probe or self-signed transport test into a claim of complete live integration.
+
+## Completed live cart sample
+
+The sample used two unique imported synthetic records and one duplicate delivery. One eligible cart completed, one no-consent record was blocked, one model call was recorded for the eligible cart, and zero model calls/effects were recorded for the blocked record. HubSpot search and Sheets reads each returned one matching remote record after replay. The final live demo server reports external writes paused. The normal .env remains in fixture mode; the scoped demonstration used a separate live database.
+
+The decision source was the real Slack HTTPS callback, not a local dashboard click or a self-signed emulation. Incoming callback count was not measured. The editor captures are an edited walkthrough with idle waits omitted; the human click happened outside the recorded dashboard tab and is evidenced by the signed callback, durable decision and downstream receipts.

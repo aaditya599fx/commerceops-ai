@@ -1,0 +1,41 @@
+{
+  "duration_seconds": 44.0,
+  "encoded_frames": 440,
+  "source_capture_fps": 1,
+  "size_bytes": 738703,
+  "first_capture_at": "2026-11-03T10:48:31.039Z",
+  "last_capture_at": "2026-11-03T11:09:48.806Z",
+  "chapters": [
+    {
+      "start": 0,
+      "end": 6,
+      "label": "Real n8n intake and Gemini draft. Waiting for a human Slack decision."
+    },
+    {
+      "start": 6,
+      "end": 12,
+      "label": "Failure case: no consent. Blocked before model generation; no external actions."
+    },
+    {
+      "start": 12,
+      "end": 22,
+      "label": "Actual Slack decision received. HubSpot task and Google Sheets append completed; writes paused."
+    },
+    {
+      "start": 22,
+      "end": 30,
+      "label": "Duplicate replay: suppressed by n8n intake; one task, one report row, unchanged receipts."
+    },
+    {
+      "start": 30,
+      "end": 36,
+      "label": "Verified live sample: one completed eligible cart, one policy block, one suppressed replay."
+    },
+    {
+      "start": 36,
+      "end": 44,
+      "label": "Real Slack, HubSpot and Sheets receipts. Human review was received via signed HTTPS; live dispatch is paused."
+    }
+  ],
+  "method": "Actual browser dashboard captures, edited into a captioned walkthrough. Idle waiting between chapters is omitted. The human Slack click occurred outside the captured tab and is evidenced by its signed callback and durable audit record. No fixture effects are substituted."
+}

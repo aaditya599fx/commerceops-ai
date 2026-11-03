@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-03T10:19:34.063991+00:00",
+  "checked_at": "2026-11-03T11:05:52.860914+00:00",
   "services": {
     "shopify": {
       "read": "verified",
@@ -51,18 +51,22 @@
     },
     "slack": {
       "authentication": "verified",
-      "message_write": "verified_approved_synthetic_test"
+      "message_write": "verified_approved_synthetic_test",
+      "interactive_callback": "verified_actual_signed_human_decision",
+      "transport": "https_request_url"
     },
     "hubspot": {
       "task_write": "verified",
       "read_after_write_http_status": 200,
-      "test_data": "synthetic_unassigned_task"
+      "test_data": "synthetic_unassigned_task",
+      "live_cart_task_readback": "verified"
     },
     "sheets": {
       "api_enabled": true,
       "file_access": "verified_read",
-      "append": "not_verified",
-      "events_tab_exists": false
+      "append": "verified_readback",
+      "events_tab_exists": true,
+      "rows_for_test_event": 1
     },
     "gemini": {
       "model": "gemini-3.5-flash-lite",
@@ -88,8 +92,10 @@
     "public_api_without_token_http_status": 401,
     "local_authenticated_api_http_status": 200
   },
-  "limits": "These are individual API/transport checks, not an end-to-end live workflow success rate. No customer email was sent; no live model output was substituted with fixtures.",
-  "workflow_check": "dead_letter",
+  "limits": "One approved live synthetic cart and one policy failure, plus separate API smoke checks. These do not establish production reliability or Shopify-originated delivery. No customer email was sent and no live model output was replaced with fixtures.",
+  "workflow_check": "completed_live_synthetic_cart",
   "n8n_queue_check": "completed_with_fixture_effects_and_emulated_callback",
-  "unit_and_failure_tests_passed": 53
+  "unit_and_failure_tests_passed": 53,
+  "live_cart_evidence": "evidence/live-cart-demonstration.json",
+  "live_writes_paused": true
 }

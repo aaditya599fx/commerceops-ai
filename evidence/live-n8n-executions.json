@@ -1,0 +1,33 @@
+{
+  "collected_at": "2026-11-03T11:09:56.863818+00:00",
+  "intake_executions": [
+    {
+      "event_id": "commerceops-synthetic-live-cart-20261103-01",
+      "execution_id": 273,
+      "workflow_id": "commerceops-cart",
+      "status": "success",
+      "mode": "webhook",
+      "started_at": "2026-11-03 10:40:14.350",
+      "stopped_at": "2026-11-03 10:40:15.832"
+    },
+    {
+      "event_id": "commerceops-synthetic-live-cart-20261103-01",
+      "execution_id": 300,
+      "workflow_id": "commerceops-cart",
+      "status": "success",
+      "mode": "webhook",
+      "started_at": "2026-11-03 11:05:51.306",
+      "stopped_at": "2026-11-03 11:05:51.348"
+    },
+    {
+      "event_id": "commerceops-synthetic-live-no-consent-20261103-01",
+      "execution_id": 275,
+      "workflow_id": "commerceops-cart",
+      "status": "success",
+      "mode": "webhook",
+      "started_at": "2026-11-03 10:41:54.009",
+      "stopped_at": "2026-11-03 10:41:54.037"
+    }
+  ],
+  "limits": "Metadata only. Workflow execution success does not by itself prove external actions; see live-cart-demonstration.json for independent readbacks."
+}

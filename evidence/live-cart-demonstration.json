@@ -1,0 +1,52 @@
+{
+  "measured_at": "2026-11-03T11:05:52.860914+00:00",
+  "synthetic_inputs": true,
+  "event_id": "commerceops-synthetic-live-cart-20261103-01",
+  "intake": "actual_n8n_webhook",
+  "model": "gemini-3.5-flash-lite",
+  "review_transport": "actual_signed_slack_https_callback",
+  "reviewer": "authorized_slack_reviewer",
+  "decision_recorded_at": "2026-11-03T10:55:05.330454+00:00",
+  "completed_at": "2026-11-03T10:56:05.417696+00:00",
+  "status": "completed",
+  "remote_readbacks": {
+    "hubspot_task_subject_and_body_match": true,
+    "hubspot_task_count": 1,
+    "sheet_row_matches": true,
+    "sheet_rows_for_event": 1
+  },
+  "effects": [
+    {
+      "kind": "slack",
+      "status": "done",
+      "remote_id": "1793702415.689449",
+      "error": null
+    },
+    {
+      "kind": "hubspot",
+      "status": "done",
+      "remote_id": "414689271529",
+      "error": null
+    },
+    {
+      "kind": "sheets",
+      "status": "done",
+      "remote_id": "Events!A2:H2",
+      "error": null
+    }
+  ],
+  "replay": {
+    "duplicate": true,
+    "recorded_receipts_unchanged": true,
+    "duplicate_count": 1
+  },
+  "model_calls_for_cart": 1,
+  "no_consent_case": {
+    "status": "blocked",
+    "reason": "no_marketing_consent",
+    "model_calls": 0,
+    "external_effects": 0
+  },
+  "live_writes_paused": true,
+  "limits": "One synthetic approved cart and one policy failure. This does not establish production reliability, model accuracy, customer email delivery or Shopify-originated webhook delivery. The temporary tunnel had a recorded outage during review; HTTP delivery was verified only when the actual signed decision arrived. Dashboard fallback was offered but not used."
+}
