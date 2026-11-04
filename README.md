@@ -2,6 +2,12 @@
 
 A human-supervised commerce operations system: store signals become validated drafts, exception alerts, CRM follow-up tasks and traceable reports.
 
+[![Tests](https://github.com/aaditya599fx/commerceops-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/aaditya599fx/commerceops-ai/actions/workflows/ci.yml)
+
+**Reviewer page:** [Open the hosted preview](https://commerceops-ai-aaditya-review.aadityay793.chatgpt.site) (currently owner-private; public access awaits approval).
+
+**Start here:** [Reviewer guide](docs/REVIEWER_GUIDE.md) · [3:40 complete walkthrough](evidence/reviewer-walkthrough.mp4) · [1:12 live integration proof](evidence/live-demo.mp4) · [Resume and interview wording](docs/RESUME.md).
+
 **Current evidence:** a running local application with six implemented workflows, nine actual n8n exports, 65 passing tests and CI. A synthetic cart completed through real n8n intake, Gemini 3.5 Flash-Lite, an actual signed Slack human decision, a HubSpot task and a Google Sheets append. Independent reads confirmed exactly one matching task and one report row after duplicate replay. A no-consent event was blocked before generation or outbound actions. The six-workflow model smoke sample also passed schema and local policy checks. These small live samples do not establish production reliability or model accuracy.
 
 Shopify shop/product/order/customer/abandoned-checkout reads and three minimal webhook subscriptions are verified. **A genuine Shopify products/create webhook completed through signed ingress, n8n and Gemini into a local content draft.** Shopify reported 200 OK on attempt 1; API readback confirmed the source product stayed unpublished with zero price and quantity. [Product-delivery evidence](evidence/shopify-live-delivery.md). The first two temporary tunnels expired before recovery; the current endpoint is temporary and stable hosting has not been configured. This is a portfolio project, not a CommerceV3 internal system.
@@ -21,6 +27,12 @@ Requires Python 3.11–3.13. From the repository directory:
 Open http://localhost:8000 and enter `APP_TOKEN` from the generated `.env`. The default `fixture` mode uses fictional records and deterministic provider responses. The Python API, schema validation, SQL persistence, approvals, audit trail and failure handling are real. No customer email is sent. Fixture Slack/HubSpot/Sheets action receipts are visibly labelled `fixture:`.
 
 Click **Eligible cart**, inspect the draft, then approve or reject. Click **Replay last event** to demonstrate duplicate suppression, or **No-consent case** to see a policy block. The other sample buttons exercise inventory, reviews, product drafts, customer segmentation and executive reporting.
+
+## Reviewer page
+
+`review/` contains a static, accessible walkthrough of all six workflows with saved inputs, outputs, audit records and explicitly labelled fixture receipts. It also presents the separate live Shopify/cart evidence and recordings. Build it with `.venv/bin/python scripts/build_review_bundle.py`, then serve `runtime/reviewer-site` using Python's HTTP server. No service keys or running external integrations are needed for this recorded explorer. Buttons inspect saved examples; the local FastAPI app above executes new events.
+
+A [fresh-source HTTP check](evidence/reviewer-clean-start.json) ran all six workflows, a no-consent block and duplicate replay with blank service credentials. Existing installed Python dependencies were reused for that check; clean dependency installation is covered by CI.
 
 ## Architecture
 
@@ -57,7 +69,7 @@ The backend can run its single-process worker by default, so the application wor
 
 `workflows/` contains actual n8n CLI exports. Six event workflows plus a queue dispatcher, Shopify checkout poll and daily 09:00 Asia/Kolkata brief schedule. Imported workflows are disabled by default in a fresh install; publish intentionally after configuring credentials. `scripts/build_workflows.py` creates import candidates under ignored `runtime/import/`, not exported evidence.
 
-![Actual n8n workflow](evidence/n8n-cart.png)
+![Actual n8n workflow](evidence/n8n-cart.jpg)
 
 ## Real integrations
 

@@ -1,0 +1,47 @@
+{
+  "checked_at": "2026-11-04T05:40:02.562089+00:00",
+  "source_commit": "2d58cd08968d611aaa9e44e4ffc6eead73ba366b",
+  "method": "Fresh git-archive working copy, newly generated .env from .env.example, no service keys; actual local FastAPI HTTP requests. Existing installed Python dependencies reused; fresh dependency installation is covered by CI.",
+  "all_service_credentials_blank": true,
+  "mode": "fixture",
+  "external_api_calls": 0,
+  "results": [
+    {
+      "workflow": "cart.abandoned",
+      "status": "completed",
+      "fixture_effect_count": 3
+    },
+    {
+      "workflow": "inventory.updated",
+      "status": "completed",
+      "fixture_effect_count": 2
+    },
+    {
+      "workflow": "review.created",
+      "status": "completed",
+      "fixture_effect_count": 3
+    },
+    {
+      "workflow": "product.created",
+      "status": "draft_ready",
+      "fixture_effect_count": 0
+    },
+    {
+      "workflow": "customer.updated",
+      "status": "completed",
+      "fixture_effect_count": 2
+    },
+    {
+      "workflow": "brief.requested",
+      "status": "completed",
+      "fixture_effect_count": 1
+    },
+    {
+      "workflow": "cart.abandoned",
+      "status": "blocked",
+      "fixture_effect_count": 0
+    }
+  ],
+  "duplicate_suppressed": true,
+  "duplicate_receipts_unchanged": true
+}

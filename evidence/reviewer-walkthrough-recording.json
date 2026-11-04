@@ -1,0 +1,229 @@
+{
+  "duration_seconds": 220.0,
+  "encoded_frames": 2200,
+  "size_bytes": 2605787,
+  "fixture_snapshot_seconds": 148,
+  "live_evidence_seconds": 72,
+  "chapters": [
+    {
+      "start": 0,
+      "end": 10,
+      "label": "Six workflows, real integration proof, and reproducible failure handling.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 10,
+      "end": 22,
+      "label": "Cart follow-up: consent and value pass; a CRM draft waits for review.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 22,
+      "end": 30,
+      "label": "Saved fixture approval outcome: internal draft and report receipts; no live writes.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 30,
+      "end": 44,
+      "label": "Inventory: 8 units / 4 per day = 2 days of cover; calculated reorder 48 units.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 44,
+      "end": 58,
+      "label": "Review intelligence: sentiment, category and urgency with a verbatim source quote.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 58,
+      "end": 72,
+      "label": "Product content: source-grounded SEO, meta description, FAQ and local JSON-LD draft.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 72,
+      "end": 86,
+      "label": "Customer intelligence: 190 days since purchase produces the dormant segment in Python.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 86,
+      "end": 100,
+      "label": "Executive brief: 100 fixture orders, USD 9,947 order total, USD 99.47 AOV.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 100,
+      "end": 112,
+      "label": "Separate real Gemini smoke sample: contextual explanation; external dispatch stayed paused.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 112,
+      "end": 124,
+      "label": "Failure case: missing consent blocks generation. Duplicate replay keeps 3 receipts unchanged.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 124,
+      "end": 136,
+      "label": "Actual published n8n graph: durable intake, duplicate branch, validation and outbox.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 136,
+      "end": 148,
+      "label": "Measured fixture workload: 161 events, 152 eligible completions, 9 blocks, 30 duplicates.",
+      "mode": "recorded_fixture_snapshot"
+    },
+    {
+      "start": 148,
+      "end": 154,
+      "label": "Real n8n intake and Gemini draft. Waiting for a human Slack decision.",
+      "mode": "separate_live_service_test"
+    },
+    {
+      "start": 154,
+      "end": 160,
+      "label": "Failure case: no consent. Blocked before model generation; no external actions.",
+      "mode": "separate_live_service_test"
+    },
+    {
+      "start": 160,
+      "end": 170,
+      "label": "Actual Slack decision received. HubSpot task and Google Sheets append completed; writes paused.",
+      "mode": "separate_live_service_test"
+    },
+    {
+      "start": 170,
+      "end": 178,
+      "label": "Duplicate replay: suppressed by n8n intake; one task, one report row, unchanged receipts.",
+      "mode": "separate_live_service_test"
+    },
+    {
+      "start": 178,
+      "end": 184,
+      "label": "Verified live sample: one completed eligible cart, one policy block, one suppressed replay.",
+      "mode": "separate_live_service_test"
+    },
+    {
+      "start": 184,
+      "end": 192,
+      "label": "Real Slack, HubSpot and Sheets receipts. Human review was received via signed HTTPS; live dispatch is paused.",
+      "mode": "separate_live_service_test"
+    },
+    {
+      "start": 192,
+      "end": 196,
+      "label": "User-approved Shopify test: unpublished synthetic Draft, zero price and stock.",
+      "mode": "separate_live_service_test"
+    },
+    {
+      "start": 196,
+      "end": 202,
+      "label": "Saved in Shopify as Draft. No product publication or customer activity.",
+      "mode": "separate_live_service_test"
+    },
+    {
+      "start": 202,
+      "end": 210,
+      "label": "Shopify confirms 200 OK on attempt 1. Signature header excluded from capture.",
+      "mode": "separate_live_service_test"
+    },
+    {
+      "start": 210,
+      "end": 220,
+      "label": "Genuine webhook -> n8n -> Gemini content draft. Zero outbound actions; writes paused.",
+      "mode": "separate_live_service_test"
+    }
+  ],
+  "method": "Edited captioned walkthrough. First segment: 11 actual reviewer-page screenshots and one fully loaded n8n canvas screenshot, held for readability, showing saved outputs from actual isolated Engine runs with deterministic fixture providers. One expanded panel displays a separately recorded real-Gemini smoke sample. Buttons inspect saved data and do not execute live APIs. Final 72 seconds reproduce the separately verified live cart and Shopify walkthrough; its provenance is in live-demo-recording.json. No continuous footage or recorded narration is claimed.",
+  "captures": [
+    {
+      "file": "intro.jpg",
+      "at": "2026-11-04T05:37:24.119Z",
+      "label": "Six workflows, real integration proof, and reproducible failure handling.",
+      "seconds": 10,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    },
+    {
+      "file": "cart-pending.jpg",
+      "at": "2026-11-04T05:37:35.281Z",
+      "label": "Cart follow-up: consent and value pass; a CRM draft waits for review.",
+      "seconds": 12,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    },
+    {
+      "file": "cart-approved.jpg",
+      "at": "2026-11-04T05:37:35.742Z",
+      "label": "Saved fixture approval outcome: internal draft and report receipts; no live writes.",
+      "seconds": 8,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    },
+    {
+      "file": "inventory.jpg",
+      "at": "2026-11-04T05:37:36.177Z",
+      "label": "Inventory: 8 units / 4 per day = 2 days of cover; calculated reorder 48 units.",
+      "seconds": 14,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    },
+    {
+      "file": "review.jpg",
+      "at": "2026-11-04T05:37:45.823Z",
+      "label": "Review intelligence: sentiment, category and urgency with a verbatim source quote.",
+      "seconds": 14,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    },
+    {
+      "file": "product.jpg",
+      "at": "2026-11-04T05:37:46.229Z",
+      "label": "Product content: source-grounded SEO, meta description, FAQ and local JSON-LD draft.",
+      "seconds": 14,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    },
+    {
+      "file": "customer.jpg",
+      "at": "2026-11-04T05:37:46.644Z",
+      "label": "Customer intelligence: 190 days since purchase produces the dormant segment in Python.",
+      "seconds": 14,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    },
+    {
+      "file": "brief.jpg",
+      "at": "2026-11-04T05:37:47.037Z",
+      "label": "Executive brief: 100 fixture orders, USD 9,947 order total, USD 99.47 AOV.",
+      "seconds": 14,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    },
+    {
+      "file": "real-model-sample.jpg",
+      "at": "2026-11-04T05:38:05.540Z",
+      "label": "Separate real Gemini smoke sample: contextual explanation; external dispatch stayed paused.",
+      "seconds": 12,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    },
+    {
+      "file": "failures.jpg",
+      "at": "2026-11-04T05:38:21.317Z",
+      "label": "Failure case: missing consent blocks generation. Duplicate replay keeps 3 receipts unchanged.",
+      "seconds": 12,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    },
+    {
+      "file": "n8n-cart.jpg",
+      "at": "2026-11-04T05:47:50.702149+00:00",
+      "label": "Actual published n8n graph: durable intake, duplicate branch, validation and outbox.",
+      "seconds": 12,
+      "method": "actual fully loaded n8n canvas screenshot held for readability; no workflow executed during capture"
+    },
+    {
+      "file": "measurements.jpg",
+      "at": "2026-11-04T05:38:51.551Z",
+      "label": "Measured fixture workload: 161 events, 152 eligible completions, 9 blocks, 30 duplicates.",
+      "seconds": 12,
+      "method": "actual local reviewer-page screenshot held for readability; recorded fixture processor outputs"
+    }
+  ],
+  "external_actions_during_reviewer_recording": 0
+}

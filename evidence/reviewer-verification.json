@@ -1,0 +1,39 @@
+{
+  "checked_at": "2026-11-04T05:54:22.124117+00:00",
+  "unit_tests": {
+    "passed": 65
+  },
+  "n8n_export_graphs_validated": 9,
+  "fixture_bundle": {
+    "workflows_executed": 6,
+    "external_api_calls": 0,
+    "consent_block_without_effects": true,
+    "duplicate_receipts_unchanged": true,
+    "human_approval_latency": "not_measured"
+  },
+  "fresh_source_http_check": "reviewer-clean-start.json",
+  "browser_checks": {
+    "desktop_workflow_tabs": 6,
+    "saved_approval_stage_toggle": "passed",
+    "saved_real_model_panel": "passed",
+    "mobile_viewport_width": 390,
+    "mobile_document_width": 390,
+    "mobile_last_workflow_selection": "passed"
+  },
+  "recording": {
+    "seconds": 220,
+    "filename": "reviewer-walkthrough.mp4",
+    "fixture_and_source_segment_seconds": 148,
+    "separate_live_evidence_seconds": 72,
+    "method": "actual UI screenshots held for readability, plus the existing edited live walkthrough; no uninterrupted footage or narration claimed"
+  },
+  "publication_preparation": {
+    "repository_visibility": "private",
+    "reviewer_page_access": "owner_private",
+    "reviewer_page_url": "https://commerceops-ai-aaditya-review.aadityay793.chatgpt.site",
+    "candidate_files_scanned": 106,
+    "known_values_and_token_pattern_matches": 0,
+    "historical_blobs_previously_scanned": 163,
+    "scan_limits": "Known values and recognizable token patterns; not a guarantee of every possible secret. Evidence screenshots were visually inspected; account/service metadata remains present."
+  }
+}

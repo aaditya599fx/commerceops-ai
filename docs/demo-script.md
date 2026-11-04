@@ -17,3 +17,8 @@ The earlier failed product deliveries and tunnel outages are recorded in the ver
 ## Fixture walkthrough
 
 [evidence/demo.mp4](../evidence/demo.mp4) is the separate deterministic fixture recording. It shows the actual n8n canvas, synthetic cart intake, dashboard approval, visibly labelled fixture receipts, duplicate suppression and a no-consent block. Its simulated provider outputs do not establish real external delivery. The 161-event reliability workload remains a fixture evaluation.
+
+
+## Complete reviewer walkthrough
+
+[evidence/reviewer-walkthrough.mp4](../evidence/reviewer-walkthrough.mp4) runs 3 minutes 40 seconds. Its first 148 seconds use 11 actual reviewer-page screenshots and one fully loaded n8n canvas screenshot, held for readability. They show saved results from isolated local Engine execution: all six workflows, the cart approval boundary, consent failure, duplicate suppression, architecture and denominators. One expanded panel displays a separate real-Gemini smoke sample. These page interactions inspect saved outputs rather than call live APIs. The final 72 seconds reproduce the live integration walkthrough above. No uninterrupted footage or narration is claimed. Capture provenance and chapter timestamps are in [reviewer-walkthrough-recording.json](../evidence/reviewer-walkthrough-recording.json).
