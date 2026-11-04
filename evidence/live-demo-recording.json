@@ -1,10 +1,13 @@
 {
-  "duration_seconds": 44.0,
-  "encoded_frames": 440,
-  "source_capture_fps": 1,
-  "size_bytes": 738703,
+  "duration_seconds": 72.0,
+  "encoded_frames": 720,
+  "source_capture_fps": {
+    "original_cart_dashboard_segment": 1,
+    "appended_shopify_segment": "four actual screenshots held for readability"
+  },
+  "size_bytes": 1171899,
   "first_capture_at": "2026-11-03T10:48:31.039Z",
-  "last_capture_at": "2026-11-03T11:09:48.806Z",
+  "last_capture_at": "2026-11-04T04:03:36.035Z",
   "chapters": [
     {
       "start": 0,
@@ -35,7 +38,49 @@
       "start": 36,
       "end": 44,
       "label": "Real Slack, HubSpot and Sheets receipts. Human review was received via signed HTTPS; live dispatch is paused."
+    },
+    {
+      "start": 44,
+      "end": 48,
+      "label": "User-approved Shopify test: unpublished synthetic Draft, zero price and stock."
+    },
+    {
+      "start": 48,
+      "end": 54,
+      "label": "Saved in Shopify as Draft. No product publication or customer activity."
+    },
+    {
+      "start": 54,
+      "end": 62,
+      "label": "Shopify confirms 200 OK on attempt 1. Signature header excluded from capture."
+    },
+    {
+      "start": 62,
+      "end": 72,
+      "label": "Genuine webhook -> n8n -> Gemini content draft. Zero outbound actions; writes paused."
     }
   ],
-  "method": "Actual browser dashboard captures, edited into a captioned walkthrough. Idle waiting between chapters is omitted. The human Slack click occurred outside the captured tab and is evidenced by its signed callback and durable audit record. No fixture effects are substituted."
+  "method": "Edited screen walkthrough from actual service UI captures. The original 44 seconds use one dashboard frame per second. The appended 28 seconds hold four actual Shopify/dashboard screenshots for readability. Idle waits are omitted; this is not uninterrupted footage. The human Slack click occurred outside the captured dashboard tab and is evidenced by the signed callback, durable audit and remote receipts. No fixture effects or generated UI scenes are substituted.",
+  "appended_shopify_capture_manifest": [
+    {
+      "file": "before-save.jpg",
+      "at": "2026-11-04T04:00:53.208Z",
+      "label": "Approved unpublished synthetic Draft; not saved yet."
+    },
+    {
+      "file": "saved-draft.jpg",
+      "at": "2026-11-04T04:01:19.550Z",
+      "label": "Actual Shopify Draft saved. It remains unpublished."
+    },
+    {
+      "file": "live-result.jpg",
+      "at": "2026-11-04T04:01:50.346Z",
+      "label": "Genuine Shopify webhook accepted. n8n and Gemini produced a local content draft; zero external effects."
+    },
+    {
+      "file": "provider-200.jpg",
+      "at": "2026-11-04T04:03:36.035Z",
+      "label": "Shopify delivery log: actual provider webhook, 200 OK on attempt 1. Signature header excluded from capture."
+    }
+  ]
 }

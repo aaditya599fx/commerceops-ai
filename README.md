@@ -4,11 +4,11 @@ A human-supervised commerce operations system: store signals become validated dr
 
 **Current evidence:** a running local application with six implemented workflows, nine actual n8n exports, 65 passing tests and CI. A synthetic cart completed through real n8n intake, Gemini 3.5 Flash-Lite, an actual signed Slack human decision, a HubSpot task and a Google Sheets append. Independent reads confirmed exactly one matching task and one report row after duplicate replay. A no-consent event was blocked before generation or outbound actions. The six-workflow model smoke sample also passed schema and local policy checks. These small live samples do not establish production reliability or model accuracy.
 
-Shopify shop/product/order/customer/abandoned-checkout reads and three minimal webhook subscriptions are verified. **Actual Shopify-originated webhook delivery remains unverified.** The first two temporary public tunnel addresses expired. All callbacks have since been renewed to a healthy temporary endpoint; a fresh Shopify delivery test is pending. Stable hosting has not been configured. This is a portfolio project, not a CommerceV3 internal system.
+Shopify shop/product/order/customer/abandoned-checkout reads and three minimal webhook subscriptions are verified. **A genuine Shopify products/create webhook completed through signed ingress, n8n and Gemini into a local content draft.** Shopify reported 200 OK on attempt 1; API readback confirmed the source product stayed unpublished with zero price and quantity. [Product-delivery evidence](evidence/shopify-live-delivery.md). The first two temporary tunnels expired before recovery; the current endpoint is temporary and stable hosting has not been configured. This is a portfolio project, not a CommerceV3 internal system.
 
 ![Operations dashboard](evidence/dashboard.png)
 
-[Live demonstration](evidence/live-demo.mp4) · [Live API measurements](evidence/live-cart-demonstration.md) · [Fixture walkthrough](evidence/demo.mp4) · [Measured reliability](evidence/reliability.md) · [Raw measurements](evidence/reliability.json) · [Setup](docs/setup.md) · [Live verification](docs/live-verification.md) · [Runbook](docs/runbook.md)
+[Live demonstration](evidence/live-demo.mp4) · [Live cart measurements](evidence/live-cart-demonstration.md) · [Live Shopify delivery](evidence/shopify-live-delivery.md) · [Fixture walkthrough](evidence/demo.mp4) · [Measured reliability](evidence/reliability.md) · [Raw measurements](evidence/reliability.json) · [Setup](docs/setup.md) · [Live verification](docs/live-verification.md) · [Runbook](docs/runbook.md)
 
 ## Run locally
 
@@ -63,7 +63,7 @@ The backend can run its single-process worker by default, so the application wor
 
 Fill `.env` locally, run read-only probes with `python scripts/check_connections.py`, then follow [the live setup checklist](docs/setup.md). Switch to `APP_MODE=live` only after configuring the intended services. Missing credentials fail closed; live mode never falls back to fixtures.
 
-- Shopify: [read-only verification evidence](evidence/shopify-verification.json); raw-body HMAC plus exact shop-domain verification; signed order/product webhooks; Admin GraphQL shop probe, current customer consent/purchase context and paginated abandoned-checkout polling. Inventory requires a supplied sales-velocity/lead-time input; these numbers are never fabricated.
+- Shopify: [API read verification](evidence/shopify-verification.json) and [genuine product webhook verification](evidence/shopify-live-delivery.json); raw-body HMAC plus exact shop-domain verification; signed order/product webhooks; Admin GraphQL shop probe, current customer consent/purchase context and paginated abandoned-checkout polling. Inventory requires a supplied sales-velocity/lead-time input; these numbers are never fabricated.
 - Model API: select Gemini (`LLM_PROVIDER=gemini`) or OpenAI (`LLM_PROVIDER=openai`). Both use JSON Schema and local validation with bounded retries; failed credentials never switch providers. Gemini uses native generateContent; OpenAI uses Responses with `store=false`. Prompt is versioned in `prompts/`. Email and customer IDs are omitted from model input.
 - Slack: Web API approval messages; signed interactive callbacks; five-minute signature age limit; explicit reviewer ID allowlist.
 - HubSpot: real Tasks API. Customer communications remain internal CRM drafts. No automated email channel is implemented.

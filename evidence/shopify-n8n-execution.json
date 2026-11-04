@@ -1,0 +1,11 @@
+{
+  "id": 1049,
+  "workflowId": "commerceops-dispatcher",
+  "status": "success",
+  "startedAt": "2026-11-04 04:01:03.045",
+  "stoppedAt": "2026-11-04 04:01:04.721",
+  "processed_events": 1,
+  "correlated_event_id": "shopify:a6696798-c816-5643-99a5-2432440d8698",
+  "correlation": "Single queued Shopify run processed during this n8n execution; the worker response records a count, not event IDs. Backend audit timestamps overlap the execution.",
+  "evidence_source": "read-only local n8n execution database"
+}

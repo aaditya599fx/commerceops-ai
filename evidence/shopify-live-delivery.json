@@ -1,0 +1,54 @@
+{
+  "checked_at": "2026-11-04T04:01:05.506941+00:00",
+  "synthetic_product": true,
+  "shop": "wy604h-g0.myshopify.com",
+  "product_id": "gid://shopify/Product/10385063870681",
+  "title": "CommerceOps synthetic webhook test \u2014 2026-11-04",
+  "source_product_status": "DRAFT",
+  "source_published_at": null,
+  "source": "actual_shopify_products_create_delivery",
+  "signature_and_shop_validation": "passed_at_ingress",
+  "event_id": "shopify:a6696798-c816-5643-99a5-2432440d8698",
+  "received_at": "2026-11-04T04:00:56.759222+00:00",
+  "processor_status": "draft_ready",
+  "completed_at": "2026-11-04T04:01:04.715555+00:00",
+  "processing_owner": "n8n_scheduled_dispatcher",
+  "model": "gemini-3.5-flash-lite",
+  "model_calls": 1,
+  "local_draft": {
+    "seo_title": "CommerceOps synthetic webhook test \u2014 2026-11-04",
+    "meta_description": "Synthetic verification record for the CommerceOps AI product-created webhook. This draft is not offered for sale.",
+    "answer": "Synthetic verification record for the CommerceOps AI product-created webhook. This draft is not offered for sale.",
+    "faq_candidates": [],
+    "provider_mode": "live",
+    "json_ld": {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "CommerceOps synthetic webhook test \u2014 2026-11-04",
+      "description": "<p>Synthetic verification record for the CommerceOps AI product-created webhook. This draft is not offered for sale.</p>"
+    }
+  },
+  "external_effects": 0,
+  "live_writes_paused": true,
+  "limits": "One unpublished synthetic product and one provider-originated products/create delivery. Order-created/updated delivery and real abandoned-checkout recovery are not exercised by this sample. No customer, order, purchase or public product publication was performed.",
+  "provider_delivery_log": {
+    "status": "200 OK",
+    "attempt": 1,
+    "response_time_ms": 649,
+    "payload_bytes": 278,
+    "api_version": "2026-10",
+    "shopify_event_id": "21e0f804-f77c-4875-902f-acdbb550f52a",
+    "triggered_at": "2026-11-04T04:00:54.870883605Z",
+    "webhook_id": "a6696798-c816-5643-99a5-2432440d8698",
+    "evidence": "shopify-delivery-200.jpg"
+  },
+  "n8n_execution_evidence": "shopify-n8n-execution.json",
+  "signing_secret_rotation": "verified_using_previous_still_active_secret",
+  "source_currency": "INR",
+  "source_variants": [
+    {
+      "price": "0.00",
+      "inventoryQuantity": 0
+    }
+  ]
+}

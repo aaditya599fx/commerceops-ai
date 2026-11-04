@@ -54,5 +54,7 @@
   },
   "slack_request_url": "https://rest-lite-char-tax.trycloudflare.com/webhooks/slack/actions",
   "slack_configuration_readback": "verified_in_browser_after_reload",
-  "actual_provider_delivery_on_this_url": "not_yet_verified"
+  "actual_provider_delivery_on_this_url": "verified_actual_shopify_products_create",
+  "provider_delivery_evidence": "shopify-live-delivery.json",
+  "slack_actual_callback_on_this_url": "not_retested; historical signed cart callback verified on previous URL"
 }
