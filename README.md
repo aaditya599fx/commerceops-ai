@@ -2,9 +2,9 @@
 
 A human-supervised commerce operations system: store signals become validated drafts, exception alerts, CRM follow-up tasks and traceable reports.
 
-**Current evidence:** a running local application with six implemented workflows, nine actual n8n exports, 64 passing tests and CI. A synthetic cart completed through real n8n intake, Gemini 3.5 Flash-Lite, an actual signed Slack human decision, a HubSpot task and a Google Sheets append. Independent reads confirmed exactly one matching task and one report row after duplicate replay. A no-consent event was blocked before generation or outbound actions. The six-workflow model smoke sample also passed schema and local policy checks. These small live samples do not establish production reliability or model accuracy.
+**Current evidence:** a running local application with six implemented workflows, nine actual n8n exports, 65 passing tests and CI. A synthetic cart completed through real n8n intake, Gemini 3.5 Flash-Lite, an actual signed Slack human decision, a HubSpot task and a Google Sheets append. Independent reads confirmed exactly one matching task and one report row after duplicate replay. A no-consent event was blocked before generation or outbound actions. The six-workflow model smoke sample also passed schema and local policy checks. These small live samples do not establish production reliability or model accuracy.
 
-Shopify shop/product/order/customer/abandoned-checkout reads and three minimal webhook subscriptions are verified. **Actual Shopify-originated webhook delivery remains unverified.** Both temporary public tunnel addresses have expired. Callback renewal is partial and current webhook delivery is unavailable; stable hosting has not been configured. This is a portfolio project, not a CommerceV3 internal system.
+Shopify shop/product/order/customer/abandoned-checkout reads and three minimal webhook subscriptions are verified. **Actual Shopify-originated webhook delivery remains unverified.** The first two temporary public tunnel addresses expired. All callbacks have since been renewed to a healthy temporary endpoint; a fresh Shopify delivery test is pending. Stable hosting has not been configured. This is a portfolio project, not a CommerceV3 internal system.
 
 ![Operations dashboard](evidence/dashboard.png)
 

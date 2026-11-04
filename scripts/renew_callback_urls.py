@@ -20,8 +20,10 @@ def validate_base(value):
         raise ValueError('Use a public HTTPS base URL without credentials, path, query or fragment')
     return value.rstrip('/')
 
-async def main(old_base,new_base,apply=False):
+async def main(old_base,new_base,apply=False,additional_old_bases=()):
     OLD=validate_base(old_base);NEW=validate_base(new_base)
+    previous=[validate_base(value) for value in additional_old_bases]
+    allowed_callbacks={base+'/webhooks/shopify' for base in [OLD,NEW,*previous]}
     cfg=Settings();provider=Providers(cfg,DB(cfg.database_url));api=Shopify(provider.client,provider.db,None)
     try:
         result=await api.graphql('{webhookSubscriptions(first:100){nodes{id topic uri includeFields}pageInfo{hasNextPage}}}')
@@ -31,7 +33,7 @@ async def main(old_base,new_base,apply=False):
             matches=[node for node in nodes if node['topic']==topic]
             if len(matches)!=1:raise ValueError('Expected exactly one existing subscription per topic')
             node=matches[0]
-            if node['uri'] not in (OLD+'/webhooks/shopify',NEW+'/webhooks/shopify'):raise ValueError('Unexpected current callback')
+            if node['uri'] not in allowed_callbacks:raise ValueError('Unexpected current callback')
             if set(node['includeFields'])!=set(fields):raise ValueError('Unexpected payload fields; no changes applied')
             selected.append(node)
         if apply:
@@ -40,6 +42,7 @@ async def main(old_base,new_base,apply=False):
             if health.json().get('status')!='ok' or health.json().get('version')!='0.1.0':
                 raise ValueError('Destination is not a healthy CommerceOps endpoint; no changes applied')
         report={'prepared_at':now(),'old_base_url':OLD,'new_base_url':NEW,'apply':apply,'subscriptions':[]}
+        if previous:report['additional_old_base_urls']=previous
         for node in selected:
             status='already_updated' if node['uri']==NEW+'/webhooks/shopify' else 'planned'
             if apply and status!='already_updated':
@@ -57,5 +60,5 @@ async def main(old_base,new_base,apply=False):
     finally:await provider.close()
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--old-base-url',required=True);parser.add_argument('--new-base-url',required=True);parser.add_argument('--apply',action='store_true');args=parser.parse_args()
-    asyncio.run(main(args.old_base_url,args.new_base_url,args.apply))
+    parser=argparse.ArgumentParser();parser.add_argument('--old-base-url',required=True);parser.add_argument('--new-base-url',required=True);parser.add_argument('--previous-base-url',action='append',default=[]);parser.add_argument('--apply',action='store_true');args=parser.parse_args()
+    asyncio.run(main(args.old_base_url,args.new_base_url,args.apply,args.previous_base_url))

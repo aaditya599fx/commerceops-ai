@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-04T03:43:00.151628+00:00",
+  "checked_at": "2026-11-04T03:56:58.742328+00:00",
   "services": {
     "shopify": {
       "read": "verified",
@@ -11,7 +11,7 @@
       "subscription_details": [
         {
           "topic": "ORDERS_CREATE",
-          "callback_matches": false,
+          "callback_matches": true,
           "include_fields": [
             "id",
             "created_at",
@@ -19,11 +19,11 @@
             "currency",
             "total_price"
           ],
-          "destination_state": "expired_approved_replacement"
+          "destination_state": "healthy_temporary_demo_endpoint"
         },
         {
           "topic": "ORDERS_UPDATED",
-          "callback_matches": false,
+          "callback_matches": true,
           "include_fields": [
             "id",
             "created_at",
@@ -31,7 +31,7 @@
             "currency",
             "total_price"
           ],
-          "destination_state": "expired_approved_replacement"
+          "destination_state": "healthy_temporary_demo_endpoint"
         },
         {
           "topic": "PRODUCTS_CREATE",
@@ -42,7 +42,7 @@
             "body_html",
             "created_at"
           ],
-          "destination_state": "expired_original"
+          "destination_state": "healthy_temporary_demo_endpoint"
         }
       ],
       "draft_creation": "verified_unpublished_synthetic_product",
@@ -103,48 +103,52 @@
     "invalid_signature_http_status": 401,
     "public_api_without_token_http_status": 401,
     "local_authenticated_api_http_status": 200,
-    "current_callback_state": "both_temporary_cloudflare_tunnels_expired"
+    "current_callback_state": "healthy_temporary_demo_endpoint",
+    "current_public_health_http_status": 200,
+    "current_invalid_signature_http_status": 401,
+    "current_public_api_without_token_http_status": 401
   },
-  "limits": "Historical live cart and independent task/row checks passed. Both temporary public callback endpoints are now unavailable. URL renewal is partial; genuine Shopify delivery has never been accepted. A reachable endpoint and fresh approved provider event are required. No production reliability claim.",
+  "limits": "Historical live cart and independent task/row checks passed. All callback destinations now match a healthy temporary endpoint. Genuine Shopify delivery has not yet been accepted. A fresh synthetic product is prepared but unsaved pending approval. Quick tunnel uptime and production reliability are not established.",
   "workflow_check": "completed_live_synthetic_cart",
   "n8n_queue_check": "completed_with_fixture_effects_and_emulated_callback",
-  "unit_and_failure_tests_passed": 64,
+  "unit_and_failure_tests_passed": 65,
   "live_cart_evidence": "evidence/live-cart-demonstration.json",
   "live_writes_paused": true,
   "callback_renewal": {
-    "new_base_url": "https://operate-discharge-wall-theories.trycloudflare.com",
-    "health_verified": false,
-    "destination_approval": "received",
+    "new_base_url": "https://rest-lite-char-tax.trycloudflare.com",
+    "health_verified": true,
+    "destination_approval": "user_selected_temporary_demo_tunnel",
     "previous_health_check": "passed_before_expiry",
-    "state": "partial_two_order_subscriptions_updated_product_and_slack_unchanged",
-    "blocked_by": "replacement_tunnel_expired"
+    "state": "all_shopify_slack_and_local_urls_updated_and_read_back",
+    "blocked_by": null,
+    "fresh_provider_event": "prepared_unsaved_pending_approval"
   },
   "read_authentication_recheck": {
-    "checked_at": "2026-11-04T03:40:54.329930+00:00",
+    "checked_at": "2026-11-04T03:55:03.734599+00:00",
     "probes": {
       "gemini": {
         "status": "verified_read",
-        "verified_at": "2026-11-04T03:40:51.714049+00:00",
+        "verified_at": "2026-11-04T03:55:01.397438+00:00",
         "note": "Read authentication only; end-to-end workflow unverified"
       },
       "shopify": {
         "status": "verified_read",
         "shop": "wy604h-g0.myshopify.com",
-        "verified_at": "2026-11-04T03:40:52.197089+00:00"
+        "verified_at": "2026-11-04T03:55:01.856922+00:00"
       },
       "slack": {
         "status": "verified_read",
-        "verified_at": "2026-11-04T03:40:52.562172+00:00",
+        "verified_at": "2026-11-04T03:55:02.192053+00:00",
         "note": "Read authentication only; end-to-end workflow unverified"
       },
       "hubspot": {
         "status": "verified_read",
-        "verified_at": "2026-11-04T03:40:53.219909+00:00",
+        "verified_at": "2026-11-04T03:55:02.781306+00:00",
         "note": "Read authentication only; end-to-end workflow unverified"
       },
       "sheets": {
         "status": "verified_read",
-        "verified_at": "2026-11-04T03:40:54.327455+00:00",
+        "verified_at": "2026-11-04T03:55:03.730827+00:00",
         "note": "Read authentication only; end-to-end workflow unverified"
       }
     },

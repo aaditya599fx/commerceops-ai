@@ -1,0 +1,58 @@
+{
+  "checked_at": "2026-11-04T03:55:49.220610+00:00",
+  "base_url": "https://rest-lite-char-tax.trycloudflare.com",
+  "public_health_http_status": 200,
+  "public_private_api_without_token_http_status": 401,
+  "invalid_shopify_signature_http_status": 401,
+  "app_mode": "live",
+  "live_writes_paused": true,
+  "shopify_subscription_readback": {
+    "prepared_at": "2026-11-04T03:55:01.612159+00:00",
+    "old_base_url": "https://interval-races-seminars-badge.trycloudflare.com",
+    "new_base_url": "https://rest-lite-char-tax.trycloudflare.com",
+    "apply": false,
+    "subscriptions": [
+      {
+        "id": "gid://shopify/WebhookSubscription/2100931592409",
+        "topic": "ORDERS_CREATE",
+        "status": "already_updated",
+        "include_fields": [
+          "id",
+          "created_at",
+          "updated_at",
+          "currency",
+          "total_price"
+        ]
+      },
+      {
+        "id": "gid://shopify/WebhookSubscription/2100931625177",
+        "topic": "ORDERS_UPDATED",
+        "status": "already_updated",
+        "include_fields": [
+          "id",
+          "created_at",
+          "updated_at",
+          "currency",
+          "total_price"
+        ]
+      },
+      {
+        "id": "gid://shopify/WebhookSubscription/2100931657945",
+        "topic": "PRODUCTS_CREATE",
+        "status": "already_updated",
+        "include_fields": [
+          "id",
+          "title",
+          "body_html",
+          "created_at"
+        ]
+      }
+    ],
+    "additional_old_base_urls": [
+      "https://operate-discharge-wall-theories.trycloudflare.com"
+    ]
+  },
+  "slack_request_url": "https://rest-lite-char-tax.trycloudflare.com/webhooks/slack/actions",
+  "slack_configuration_readback": "verified_in_browser_after_reload",
+  "actual_provider_delivery_on_this_url": "not_yet_verified"
+}

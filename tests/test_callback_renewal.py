@@ -75,6 +75,19 @@ def test_unhealthy_destination_stops_all_mutations(tmp_path,monkeypatch):
     assert all(node['uri']==OLD+'/webhooks/shopify' for node in state)
 
 
+def test_partial_migration_from_two_explicit_old_addresses(tmp_path,monkeypatch):
+    state,writes=setup(tmp_path,monkeypatch)
+    previous='https://earlier-owned.example'
+    state[2]['uri']=previous+'/webhooks/shopify'
+    with pytest.raises(ValueError,match='Unexpected current callback'):
+        asyncio.run(renewal.main(OLD,NEW,True))
+    assert writes==[]
+    report=asyncio.run(renewal.main(OLD,NEW,True,[previous]))
+    assert writes==['1','2','3']
+    assert all(node['uri']==NEW+'/webhooks/shopify' for node in state)
+    assert report['additional_old_base_urls']==[previous]
+
+
 def test_uncertain_update_is_reconciled_without_repeating_it(tmp_path,monkeypatch):
     _,writes=setup(tmp_path,monkeypatch,uncertain=True)
     with pytest.raises(ProviderError):asyncio.run(renewal.main(OLD,NEW,True))
