@@ -12,8 +12,15 @@ class Shopify:
     def verify(self,raw,signature,shop):
         secret=os.getenv('SHOPIFY_WEBHOOK_SECRET',''); expected=os.getenv('SHOPIFY_SHOP','')
         if not secret or not expected or shop!=expected: return False
-        digest=base64.b64encode(hmac.new(secret.encode(),raw,hashlib.sha256).digest()).decode()
-        return hmac.compare_digest(digest,signature)
+        # During rotation Shopify signs with the oldest unrevoked app secret.
+        # Accept the explicitly configured previous secret during that transition.
+        secrets=dict.fromkeys([secret,os.getenv('SHOPIFY_PREVIOUS_WEBHOOK_SECRET','')])
+        valid=False
+        for candidate in secrets:
+            if not candidate:continue
+            digest=base64.b64encode(hmac.new(candidate.encode(),raw,hashlib.sha256).digest()).decode()
+            valid|=hmac.compare_digest(digest,signature)
+        return valid
     async def graphql(self,query,variables=None,*,safe_retry=True):
         shop=os.getenv('SHOPIFY_SHOP',''); token=os.getenv('SHOPIFY_ACCESS_TOKEN','')
         if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9-]*\.myshopify\.com',shop):

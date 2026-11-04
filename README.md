@@ -2,9 +2,9 @@
 
 A human-supervised commerce operations system: store signals become validated drafts, exception alerts, CRM follow-up tasks and traceable reports.
 
-**Current evidence:** a running local application with six implemented workflows, nine actual n8n exports, 53 passing tests and CI. A synthetic cart completed through real n8n intake, Gemini 3.5 Flash-Lite, an actual signed Slack human decision, a HubSpot task and a Google Sheets append. Independent reads confirmed exactly one matching task and one report row after duplicate replay. A no-consent event was blocked before generation or outbound actions. The six-workflow model smoke sample also passed schema and local policy checks. These small live samples do not establish production reliability or model accuracy.
+**Current evidence:** a running local application with six implemented workflows, nine actual n8n exports, 64 passing tests and CI. A synthetic cart completed through real n8n intake, Gemini 3.5 Flash-Lite, an actual signed Slack human decision, a HubSpot task and a Google Sheets append. Independent reads confirmed exactly one matching task and one report row after duplicate replay. A no-consent event was blocked before generation or outbound actions. The six-workflow model smoke sample also passed schema and local policy checks. These small live samples do not establish production reliability or model accuracy.
 
-Shopify shop/product/order/customer/abandoned-checkout reads and three minimal webhook subscriptions are verified. **Actual Shopify-originated webhook delivery remains unverified.** The temporary public tunnel had an observed outage during review; permanent hosting has not been verified. This is a portfolio project, not a CommerceV3 internal system.
+Shopify shop/product/order/customer/abandoned-checkout reads and three minimal webhook subscriptions are verified. **Actual Shopify-originated webhook delivery remains unverified.** Both temporary public tunnel addresses have expired. Callback renewal is partial and current webhook delivery is unavailable; stable hosting has not been configured. This is a portfolio project, not a CommerceV3 internal system.
 
 ![Operations dashboard](evidence/dashboard.png)
 
@@ -92,4 +92,4 @@ Product copy is intentionally extractive to make factual grounding enforceable. 
 
 Live outbound actions default to paused (ENABLE_EXTERNAL_WRITES=false). Slack decisions are durably queued before acknowledgement. Order webhook replay and out-of-order updates are handled explicitly; see the live verification runbook.
 
-The latest isolated real-model cart attempt is preserved in [live-workflow-check.json](evidence/live-workflow-check.json): it failed closed on exhausted API credits and dispatched no actions. Real API/transport checks are summarized in [live-readiness.json](evidence/live-readiness.json).
+An earlier failed isolated real-model cart attempt is preserved in [live-workflow-check.json](evidence/live-workflow-check.json): it failed closed on exhausted OpenAI API credits and dispatched no actions. The later successful Gemini run is documented separately in live-cart-demonstration.md. Real API/transport checks are summarized in [live-readiness.json](evidence/live-readiness.json).

@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-11-03T12:32:53.988618+00:00",
+  "product": {
+    "id": "gid://shopify/Product/10381782974681",
+    "title": "CommerceOps synthetic webhook test \u2014 2026-11-03",
+    "status": "DRAFT",
+    "publishedAt": null,
+    "createdAt": "2026-11-03T11:27:04Z"
+  },
+  "webhook_delivery": "not_yet_accepted",
+  "external_actions_dispatched": 0
+}

@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-03T11:05:52.860914+00:00",
+  "checked_at": "2026-11-04T03:43:00.151628+00:00",
   "services": {
     "shopify": {
       "read": "verified",
@@ -11,25 +11,27 @@
       "subscription_details": [
         {
           "topic": "ORDERS_CREATE",
-          "callback_matches": true,
+          "callback_matches": false,
           "include_fields": [
             "id",
             "created_at",
             "updated_at",
             "currency",
             "total_price"
-          ]
+          ],
+          "destination_state": "expired_approved_replacement"
         },
         {
           "topic": "ORDERS_UPDATED",
-          "callback_matches": true,
+          "callback_matches": false,
           "include_fields": [
             "id",
             "created_at",
             "updated_at",
             "currency",
             "total_price"
-          ]
+          ],
+          "destination_state": "expired_approved_replacement"
         },
         {
           "topic": "PRODUCTS_CREATE",
@@ -39,9 +41,19 @@
             "title",
             "body_html",
             "created_at"
-          ]
+          ],
+          "destination_state": "expired_original"
         }
-      ]
+      ],
+      "draft_creation": "verified_unpublished_synthetic_product",
+      "secret_rotation_support": "implemented_and_tested_with_current_and_previous_active_secrets; provider acceptance unverified",
+      "product_create_delivery": "not_yet_accepted",
+      "latest_provider_delivery": {
+        "attempt": 9,
+        "at": "2026-11-03T15:27:14Z",
+        "status": "Invalid webhook URL",
+        "accepted": false
+      }
     },
     "openai": {
       "authentication": "failed_latest_probe",
@@ -90,12 +102,52 @@
     "self_signed_transport_http_status": 200,
     "invalid_signature_http_status": 401,
     "public_api_without_token_http_status": 401,
-    "local_authenticated_api_http_status": 200
+    "local_authenticated_api_http_status": 200,
+    "current_callback_state": "both_temporary_cloudflare_tunnels_expired"
   },
-  "limits": "One approved live synthetic cart and one policy failure, plus separate API smoke checks. These do not establish production reliability or Shopify-originated delivery. No customer email was sent and no live model output was replaced with fixtures.",
+  "limits": "Historical live cart and independent task/row checks passed. Both temporary public callback endpoints are now unavailable. URL renewal is partial; genuine Shopify delivery has never been accepted. A reachable endpoint and fresh approved provider event are required. No production reliability claim.",
   "workflow_check": "completed_live_synthetic_cart",
   "n8n_queue_check": "completed_with_fixture_effects_and_emulated_callback",
-  "unit_and_failure_tests_passed": 53,
+  "unit_and_failure_tests_passed": 64,
   "live_cart_evidence": "evidence/live-cart-demonstration.json",
-  "live_writes_paused": true
+  "live_writes_paused": true,
+  "callback_renewal": {
+    "new_base_url": "https://operate-discharge-wall-theories.trycloudflare.com",
+    "health_verified": false,
+    "destination_approval": "received",
+    "previous_health_check": "passed_before_expiry",
+    "state": "partial_two_order_subscriptions_updated_product_and_slack_unchanged",
+    "blocked_by": "replacement_tunnel_expired"
+  },
+  "read_authentication_recheck": {
+    "checked_at": "2026-11-04T03:40:54.329930+00:00",
+    "probes": {
+      "gemini": {
+        "status": "verified_read",
+        "verified_at": "2026-11-04T03:40:51.714049+00:00",
+        "note": "Read authentication only; end-to-end workflow unverified"
+      },
+      "shopify": {
+        "status": "verified_read",
+        "shop": "wy604h-g0.myshopify.com",
+        "verified_at": "2026-11-04T03:40:52.197089+00:00"
+      },
+      "slack": {
+        "status": "verified_read",
+        "verified_at": "2026-11-04T03:40:52.562172+00:00",
+        "note": "Read authentication only; end-to-end workflow unverified"
+      },
+      "hubspot": {
+        "status": "verified_read",
+        "verified_at": "2026-11-04T03:40:53.219909+00:00",
+        "note": "Read authentication only; end-to-end workflow unverified"
+      },
+      "sheets": {
+        "status": "verified_read",
+        "verified_at": "2026-11-04T03:40:54.327455+00:00",
+        "note": "Read authentication only; end-to-end workflow unverified"
+      }
+    },
+    "note": "Read probes do not demonstrate writes or webhook delivery."
+  }
 }

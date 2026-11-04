@@ -82,3 +82,14 @@ New Shopify Dev Dashboard apps exchange Client ID/Client Secret for a token auto
 ## Live action enablement and evidence
 
 ENABLE_EXTERNAL_WRITES defaults to false. Enable it deliberately after approving the intended Slack/CRM/Sheets test actions. Read-only probes update credential-bound private connection evidence, and the dashboard shows read, generation and write phases separately. Changing credentials invalidates old connection evidence; checks older than 24 hours are hidden. See docs/live-verification.md for the current blockers and verification boundaries.
+
+## Shopify signing-secret rotation
+
+Set SHOPIFY_WEBHOOK_SECRET to the current app client secret. While the previous secret is still active, set optional SHOPIFY_PREVIOUS_WEBHOOK_SECRET to that previous value. Shopify signs webhooks with the oldest unrevoked secret during rotation; the adapter validates the exact raw body against the configured active pair and still requires the exact shop domain. Remove the previous value after that secret is revoked and the transition is complete. The app does not rotate or revoke credentials. [Shopify credential guidance](https://shopify.dev/docs/apps/build/authentication-authorization/manage-credentials).
+
+## Replacing an expired temporary callback URL
+
+Temporary Cloudflare tunnel addresses can disappear. Start and verify the replacement endpoint first, then review the destination and minimal payloads before applying changes. `python scripts/renew_callback_urls.py --old-base-url OLD_HTTPS_BASE --new-base-url NEW_HTTPS_BASE` prints a read-only plan for the existing three subscriptions. Add `--apply` only after authorizing that destination. Before applying, it requires an anonymous /health response identifying a healthy CommerceOps app. It updates only their URI, preserves included fields and does not retry ambiguous writes. Rerun the read-only plan to reconcile a partial or uncertain update. Update Slack interactivity and PUBLIC_BASE_URL consistently, then verify real provider delivery again. The script does not create products or generate a test webhook.
+
+
+Use a stable hostname for ongoing callbacks. A Cloudflare named tunnel requires an account and a domain you control; Quick Tunnels are temporary testing endpoints with no uptime guarantee. Keep the local app and tunnel running and prevent the host from sleeping during a test. A named tunnel still depends on this computer remaining available. See [Cloudflare Tunnel setup](https://developers.cloudflare.com/tunnel/get-started/) and [Quick Tunnel limitations](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/). Do not rotate callback URLs automatically: reconcile subscriptions, Slack settings and PUBLIC_BASE_URL together, then prove a genuine provider delivery.
