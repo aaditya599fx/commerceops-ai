@@ -4,7 +4,7 @@ A human-supervised commerce operations system: store signals become validated dr
 
 [![Tests](https://github.com/aaditya599fx/commerceops-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/aaditya599fx/commerceops-ai/actions/workflows/ci.yml)
 
-**Reviewer page:** [Open the hosted preview](https://commerceops-ai-aaditya-review.aadityay793.chatgpt.site) (currently owner-private; public access awaits approval).
+**Reviewer page:** [Explore all six workflows and watch the complete demo](https://commerceops-ai-aaditya-review.aadityay793.chatgpt.site). Public access; no sign-in, service keys or running laptop required.
 
 **Start here:** [Reviewer guide](docs/REVIEWER_GUIDE.md) · [3:40 complete walkthrough](evidence/reviewer-walkthrough.mp4) · [1:12 live integration proof](evidence/live-demo.mp4) · [Resume and interview wording](docs/RESUME.md).
 

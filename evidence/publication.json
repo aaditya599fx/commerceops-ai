@@ -1,0 +1,49 @@
+{
+  "verified_at": "2026-11-04T06:07:10.748396+00:00",
+  "method": "Anonymous HTTPS requests with fresh clients, no Authorization headers or pre-existing cookies. Media checks request only an initial byte range.",
+  "audited_source_commit": "780486642f4783e4b98b28c2ee82bbbef3897f07",
+  "repository_visibility": "public",
+  "reviewer_site_access": "public",
+  "checks": [
+    {
+      "resource": "repository",
+      "url": "https://api.github.com/repos/aaditya599fx/commerceops-ai",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "authentication_sent": false,
+      "visibility": "public"
+    },
+    {
+      "resource": "reviewer_page",
+      "url": "https://commerceops-ai-aaditya-review.aadityay793.chatgpt.site",
+      "http_status": 200,
+      "content_type": "text/html",
+      "authentication_sent": false
+    },
+    {
+      "resource": "full_walkthrough",
+      "url": "https://commerceops-ai-aaditya-review.aadityay793.chatgpt.site/assets/reviewer-walkthrough.mp4",
+      "http_status": 200,
+      "content_type": "video/mp4",
+      "authentication_sent": false,
+      "mp4_header_verified": true
+    },
+    {
+      "resource": "live_proof",
+      "url": "https://commerceops-ai-aaditya-review.aadityay793.chatgpt.site/assets/live-demo.mp4",
+      "http_status": 200,
+      "content_type": "video/mp4",
+      "authentication_sent": false,
+      "mp4_header_verified": true
+    },
+    {
+      "resource": "workflow_snapshot",
+      "url": "https://commerceops-ai-aaditya-review.aadityay793.chatgpt.site/snapshot.json",
+      "http_status": 200,
+      "content_type": "application/json",
+      "authentication_sent": false,
+      "saved_workflows": 6
+    }
+  ],
+  "limits": "Hosted page serves recorded workflow snapshots and videos. It does not run live commerce APIs. Backend tunnel availability is independent."
+}

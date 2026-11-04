@@ -35,5 +35,6 @@
     "known_values_and_token_pattern_matches": 0,
     "historical_blobs_previously_scanned": 163,
     "scan_limits": "Known values and recognizable token patterns; not a guarantee of every possible secret. Evidence screenshots were visually inspected; account/service metadata remains present."
-  }
+  },
+  "publication_evidence": "publication.json"
 }
